@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class ContentHome extends StatelessWidget {
@@ -8,7 +7,7 @@ class ContentHome extends StatelessWidget {
       "title": "Prefierenos",
       "imageUrl": "https://img.fotocommunity.com/el-mundo-en-sus-manos-3a6c3dd3-95da-4de4-bb0b-ad79635ca741.jpg?height=100",
       "content": "Razones para preferirnos...",
-      "className": "PreferenosPage", // Nombre de la clase para el contenido
+      "className": "PreferenosPage",
     },
     {
       "title": "¿Por qué preferirnos?",
@@ -16,7 +15,6 @@ class ContentHome extends StatelessWidget {
       "content": "Nuestra calidad nos define...",
       "className": "PorQuePreferirnosPage",
     },
-    // Agregar más elementos aquí
   ];
 
   ContentHome({Key? key}) : super(key: key);
@@ -24,15 +22,15 @@ class ContentHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Center(
         child: Stack(
           alignment: Alignment.center,
           children: [
             CircleAvatar(
-              radius: 80.0,
-              backgroundImage: AssetImage('lib/src/img/logo2.jpg'), // Imagen del logo
+              radius: 60.0,
+              backgroundImage: AssetImage('lib/src/img/logo2.jpg'),
             ),
-            // Generar los tentáculos con los elementos
             ..._generateTentacles(context),
           ],
         ),
@@ -40,38 +38,42 @@ class ContentHome extends StatelessWidget {
     );
   }
 
-  // Método para generar los "tentáculos" con los elementos de la lista
+  // Método para generar los círculos hijos ("tentáculos")
   List<Widget> _generateTentacles(BuildContext context) {
-    final double centerRadius = 120.0; // Radio del área central
-    final double itemRadius = 40.0; // Radio de los círculos hijos
-    final double angleStep = 360 / contentItems.length; // Ángulo entre elementos
+    final double centerRadius = 100.0; // Radio de distancia desde el centro
+    final double itemRadius = 40.0; // Tamaño de los círculos hijos
+    final double angleStep = 360 / contentItems.length; // Ángulo entre cada círculo
     List<Widget> widgets = [];
 
-    final double centerX = MediaQuery.of(context).size.width / 2;
-    final double centerY = MediaQuery.of(context).size.height / 2;
-
     for (int i = 0; i < contentItems.length; i++) {
-      final double angle = angleStep * i;
-      final double radians = angle * (3.141592653589793 / 180); // Convertir a radianes
+      final double angle = angleStep * i; // Ángulo actual en grados
+      final double radians = angle * (pi / 180); // Convertir a radianes
 
-      final double x = centerX + centerRadius * cos(radians);
-      final double y = centerY + centerRadius * sin(radians);
+      // Calcular posiciones basadas en el ángulo y el radio
+      final double x = centerRadius * cos(radians);
+      final double y = centerRadius * sin(radians);
 
       widgets.add(
         Positioned(
-          left: x - itemRadius,
-          top: y - itemRadius,
+          left: (MediaQuery.of(context).size.width / 2) + x - itemRadius,
+          top: (MediaQuery.of(context).size.height / 2) + y - itemRadius,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               GestureDetector(
-                onTap: () {
-                  _navigateToClass(context, contentItems[i]["className"]);
-                },
-                child: CircleAvatar(
-                  radius: itemRadius / 2,
-                  backgroundImage: const AssetImage('lib/src/img/fondo.jpg'),
-                ),
+                  onTap: () {
+                    _navigateToClass(context, contentItems[i]["className"]);
+                  },
+                  child: Image.network(
+                    contentItems[i]["imageUrl"]?.toString() ?? '',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'lib/src/img/logo.png',
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
               ),
               const SizedBox(height: 4),
               Text(
@@ -83,36 +85,13 @@ class ContentHome extends StatelessWidget {
           ),
         ),
       );
-
-      // Dibujar la línea entre el centro y el elemento
-      widgets.add(
-        _buildLine(centerX, centerY, x, y),
-      );
     }
 
     return widgets;
   }
 
-
-  // Método para dibujar las líneas entre el centro y los círculos hijos
-  Widget _buildLine(double x, double y, double radius, double radians) {
-    return Positioned(
-      left: MediaQueryData.fromView(WidgetsBinding.instance.window).size.width / 2,
-      top: MediaQueryData.fromView(WidgetsBinding.instance.window).size.height / 2,
-      child: Transform.rotate(
-        angle: radians,
-        child: Container(
-          width: radius,
-          height: 2,
-          color: Colors.blue[800],
-        ),
-      ),
-    );
-  }
-
-  // Método para navegar a la clase correspondiente
+  // Método para navegar a las clases
   void _navigateToClass(BuildContext context, String className) {
-    // Ejemplo de navegación basada en el nombre de la clase
     if (className == "PreferenosPage") {
       Navigator.push(
         context,
@@ -124,7 +103,6 @@ class ContentHome extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const PorQuePreferirnosPage()),
       );
     } else {
-      // Página por defecto o error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("No se encontró la clase $className")),
       );

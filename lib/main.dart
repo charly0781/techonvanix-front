@@ -8,14 +8,14 @@ import 'package:techonvanix/src/service/ApiService.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Necesario para operaciones asíncronas antes de runApp
 
-  const baseUrl = 'https://back.techonvanix.com';
+  const baseUrl = 'http://back.techonvanix.com';
   final apiServicio = ApiServicio(baseUrl: baseUrl);
 
   try {
     // Inicializar datos globales
     await GlobalData.initializeData(apiServicio);
   } catch (e) {
-    print('Error durante la inicialización: $e');
+      print('Error durante la inicialización: $e');
   }
 
   runApp(

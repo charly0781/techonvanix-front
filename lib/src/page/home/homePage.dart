@@ -21,8 +21,11 @@ class HomePage extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.1),
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.2),
+                BlendMode.dstATop,
+              ),
               child: Image.network(
                 companyData?['urlFondo']?.toString() ?? '',
                 fit: BoxFit.cover,
@@ -38,7 +41,6 @@ class HomePage extends StatelessWidget {
           Column(
             children: [
               const HeaderHomePage(),
-              // Aquí se carga el ContentHome
               Expanded(
                 child: ContentHome(),
               ),
