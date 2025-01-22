@@ -1,86 +1,134 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/home/ShowTooltip.dart';
+import 'package:techonvanix/src/page/transversal/MessageDialog.dart';
+import 'package:techonvanix/src/process/dto/ApiResponse.dart';
+import 'package:techonvanix/src/service/Utilitarios.dart';
 
-class ContentHome extends StatelessWidget {
-  final double posH = 2.4;
-  final double posV = 2;
-  final double sizeCircle = 200.0;
-  final double sizeChildren = 50.0;
-  final double radiosDistance = 250.0;
-  final double postScreemX = 100.0;
-  final double postScreemY = 100.0;
-  final List<Map<String, dynamic>> contentItems = [
-    {
-      "title": "Prefierenos",
-      "leyenda": "Agradecemos la confianza",
-      "imageUrl": "lib/src/img/logoSF.png",
-      "content": "Razones para preferirnos...",
-      "className": "PreferenosPage",
-    },
-    {
-      "title": "¿Por qué preferirnos?",
-      "leyenda": "Agradecemos la confianza",
-      "imageUrl": "lib/src/img/app_icon.png",
-      "content": "Nuestra calidad nos define...",
-      "className": "PorQuePreferirnosPage",
-    },
-    {
-      "title": "¿Por qué preferirnos?",
-      "leyenda": "Agradecemos la confianza",
-      "imageUrl": "lib/src/img/app_icon.png",
-      "content": "Nuestra calidad nos define...",
-      "className": "PorQuePreferirnosPage",
-    },
-    {
-      "title": "¿Por qué preferirnos?",
-      "leyenda": "Agradecemos la confianza",
-      "imageUrl": "lib/src/img/app_icon.png",
-      "content": "Nuestra calidad nos define...",
-      "className": "PorQuePreferirnosPage",
-    },
+class ContentHome extends StatefulWidget {
+  const ContentHome({Key? key}) : super(key: key);
 
-  ];
+  @override
+  _ContentHomeState createState() => _ContentHomeState();
+}
 
-  ContentHome({Key? key}) : super(key: key);
+class _ContentHomeState extends State<ContentHome> {
+  final String codeUrl = "geturlMenu";
+  late Future<ApiResponse> _apiResponseFuture;
+
+  int code = 0;
+  double posH = 2.5;
+  double posV = 2.0;
+  double sizeCircle = 150.0;
+  double sizeChildren = 40.0;
+  double radiosDistance = 200.0;
+  double postScreemX = 70.0;
+  double postScreemY = 70.0;
+  String title = "Default Title";
+  String content = "Default Content";
+  List<Map<String, dynamic>> contentItems = [];
+  List<Map<String, dynamic>> temp = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _apiResponseFuture = _fetchData();
+  }
+
+  Future<ApiResponse> _fetchData() async {
+    Map<String, String> replacements = {"code": "homepage"};
+
+    final ApiResponse response = await Utilitarios.realizarPeticion(
+      tipoPeticion: "GET",
+      codigo: codeUrl,
+      parametros: replacements,
+    );
+
+    if (response.code == 200 && response.body != null) {
+      final data = response.body;
+      code = response.code;
+      // Actualizar los valores dinámicos con los datos de la API
+      setState(() {
+        posH = data['posH'] ?? posH;
+        posV = data['posV'] ?? posV;
+        sizeCircle = data['sizeCircle'] ?? sizeCircle;
+        sizeChildren = data['sizeChildren'] ?? sizeChildren;
+        radiosDistance = data['radiosDistance'] ?? radiosDistance;
+        postScreemX = data['postScreemX'] ?? postScreemX;
+        postScreemY = data['postScreemY'] ?? postScreemY;
+        title = data['title'] ?? title;
+        content = data['content'] ?? content;
+        contentItems = List<Map<String, dynamic>>.from(
+          data['menu']?.where((element) => element['active'] == true) ?? [],
+        );
+      });
+    }
+
+    if (code != 200){
+      MessageDialog.showMessage(context, title: "Home Page",
+      message: response.message, confirmButtonText: "Aceptar");
+    }
+
+    return response;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              left: MediaQuery.of(context).size.width / posV - postScreemX,
-              top: MediaQuery.of(context).size.height / posH - postScreemY,
-              child: Container(
-                width: sizeCircle,
-                height: sizeCircle,
-                child: CircleAvatar(
-                  radius: sizeCircle,
-                  backgroundImage: AssetImage('lib/src/img/logo2.jpg'),
-                ),
-              ),
+    return FutureBuilder<ApiResponse>(
+      future: _apiResponseFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (code != 200) {
+          return Scaffold(
+            appBar: AppBar(title: const Text("Error")),
+            body: const Center(
+              child: Text("Error al cargar los datos del servidor."),
             ),
-            ..._generateTentacles(context),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Círculo central
+                Positioned(
+                  left: MediaQuery.of(context).size.width / posV - postScreemX,
+                  top: MediaQuery.of(context).size.height / posH - postScreemY,
+                  child: Container(
+                    width: sizeCircle,
+                    height: sizeCircle,
+                    child: CircleAvatar(
+                      radius: sizeCircle,
+                      backgroundImage: const AssetImage('lib/src/img/logo2.jpg'),
+                    ),
+                  ),
+                ),
+                ..._generateTentacles(context),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  // Método para generar los círculos hijos ("tentáculos")
+
   List<Widget> _generateTentacles(BuildContext context) {
-    final double centerRadius = radiosDistance; // Radio para los "tentáculos"
-    final double itemRadius = sizeChildren;    // Radio de los hijos
-    final double angleStep = 360 / contentItems.length; // Ángulo entre cada hijo
+    final double centerRadius = radiosDistance;
+    final double itemRadius = sizeChildren;
+    final double angleStep = 360 / contentItems.length;
     List<Widget> widgets = [];
 
     // Generar hijos ("tentáculos") alrededor del círculo central
     for (int i = 0; i < contentItems.length; i++) {
-      final double angle = angleStep * i; // Ángulo actual en grados
-      final double radians = angle * (pi / 180); // Convertir a radianes
+      final double angle = angleStep * i;
+      final double radians = angle * (pi / 180);
 
       // Calcular posiciones basadas en el ángulo y el radio
       final double x = centerRadius * cos(radians);
@@ -90,25 +138,30 @@ class ContentHome extends StatelessWidget {
         Positioned(
           left: (MediaQuery.of(context).size.width / posV) + x - itemRadius,
           top: (MediaQuery.of(context).size.height / posH) + y - itemRadius,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _navigateToClass(context, contentItems[i]["className"]);
-                },
-                child: CircleAvatar(
-                  radius: itemRadius,
-                  backgroundImage: AssetImage(contentItems[i]["imageUrl"] ?? ''),
-                ),
+
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => Showtooltip.showTooltip(context, contentItems[i]["legend"]),
+            child: GestureDetector(
+              onTap: () {
+                _navigateToClass(context, contentItems[i]["className"]);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: itemRadius,
+                    backgroundImage: AssetImage(contentItems[i]["urlImage"] ?? ''),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    contentItems[i]["title"] ?? "",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                contentItems[i]["title"],
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
+            ),
           ),
         ),
       );
@@ -118,7 +171,15 @@ class ContentHome extends StatelessWidget {
   }
 
   // Método para navegar a las clases
-  void _navigateToClass(BuildContext context, String className) {
+  void _navigateToClass(BuildContext context, String? className) {
+    if (className == null || className.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Clase no definida.")),
+      );
+      return;
+    }
+
+    // Agregar rutas según la clase
     if (className == "PreferenosPage") {
       Navigator.push(
         context,
@@ -137,18 +198,6 @@ class ContentHome extends StatelessWidget {
   }
 }
 
-class PreferenosPage extends StatelessWidget {
-  const PreferenosPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Prefierenos")),
-      body: const Center(child: Text("Contenido de Prefierenos")),
-    );
-  }
-}
-
 class PorQuePreferirnosPage extends StatelessWidget {
   const PorQuePreferirnosPage({Key? key}) : super(key: key);
 
@@ -160,3 +209,19 @@ class PorQuePreferirnosPage extends StatelessWidget {
     );
   }
 }
+
+
+class PreferenosPage extends StatelessWidget {
+  const PreferenosPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Prefierenos")),
+      body: const Center(child: Text("Contenido de Prefierenos")),
+    );
+  }
+
+}
+
+// Método para mostrar una leyenda como Tooltip al pasar el mouse
