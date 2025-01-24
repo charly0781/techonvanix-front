@@ -7,6 +7,7 @@ class GlobalData {
 
   static Map<String, dynamic>? companyData;
   static List<dynamic>? allUrls;
+  static String token = "";
 
 
   static Future<void> initializeData(ApiServicio apiServicio) async {

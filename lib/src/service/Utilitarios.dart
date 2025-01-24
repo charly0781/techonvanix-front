@@ -27,7 +27,9 @@ class Utilitarios {
       final Map<String, dynamic> decodedBody = jsonDecode(response.body);
       return ApiResponse(
         code: decodedBody['code'],
-        message: decodedBody['message'] ?? ' ',
+        message: decodedBody['message'] != null
+            ? utf8.decode(decodedBody['message'].runes.toList())
+            : ' ',
         body: decodedBody['body'],
       );
     } catch (e) {

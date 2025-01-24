@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/home/login/LoginForm.dart';
 
 import '../../process/dto/GlobalData.dart';
 import '../transversal/DynamicImageLoader.dart';
@@ -109,19 +110,35 @@ class HeaderHomePage extends StatelessWidget {
   }
 
   void _onLoginClick(BuildContext context) {
-    MessageDialog.showMessage(
-      context,
-      title: "Informacion",
-      message: "Proyecto en construccion...",
-      confirmButtonText: "Ok",
-      onConfirm: () {
-        Navigator.of(context).pop(); // Cierra el diálogo
-        print("Botón Sí presionado");
-      },
-      onCancel: () {
-        Navigator.of(context).pop(); // Cierra el diálogo
-        print("Botón No presionado");
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Container(
+            width: 240,
+            padding: const EdgeInsets.all(20.0),
+            child: LoginForm(),
+          ),
+        );
       },
     );
+    // MessageDialog.showMessage(
+    //   context,
+    //   title: "Informacion",
+    //   message: "Proyecto en construccion...",
+    //   confirmButtonText: "Ok",
+    //   onConfirm: () {
+    //     Navigator.of(context).pop(); // Cierra el diálogo
+    //     print("Botón Sí presionado");
+    //   },
+    //   onCancel: () {
+    //     Navigator.of(context).pop(); // Cierra el diálogo
+    //     print("Botón No presionado");
+    //   },
+    // );
   }
 }

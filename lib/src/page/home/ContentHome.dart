@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/ShowTooltip.dart';
+import 'package:techonvanix/src/page/transversal/DynamicImageLoader.dart';
 import 'package:techonvanix/src/page/transversal/MessageDialog.dart';
 import 'package:techonvanix/src/process/dto/ApiResponse.dart';
 import 'package:techonvanix/src/service/Utilitarios.dart';
@@ -149,9 +150,13 @@ class _ContentHomeState extends State<ContentHome> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircleAvatar(
-                    radius: itemRadius,
-                    backgroundImage: AssetImage(contentItems[i]["urlImage"] ?? ''),
+                  ClipOval(
+                    child: DynamicImageLoader(
+                      placeholderPath: 'lib/src/img/app_icon.png',
+                      imageUrl: contentItems[i]["urlImage"] ?? '',
+                      width: itemRadius,
+                      height: itemRadius,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
