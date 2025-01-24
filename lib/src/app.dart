@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
               print("router: " + settings.name.toString());
               switch (settings.name) {
                 case '/':
-                  return Userpage();
+                  return UserPage();
                   // return HomePage();
-                case '/login':
-                  return LoginPage();
+                case '/userPage':
+                  return UserPage();
                 default:
                   return HomePage();
               }
