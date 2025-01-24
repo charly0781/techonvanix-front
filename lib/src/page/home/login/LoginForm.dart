@@ -1,12 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
 import 'package:techonvanix/src/process/dto/GlobalData.dart';
-
 import '../../../process/dto/ApiResponse.dart';
 import '../../../service/Utilitarios.dart';
-import '../../transversal/MessageDialog.dart';
-import '../ShowTooltip.dart';
 
 class LoginForm extends StatefulWidget {
 
@@ -141,6 +139,10 @@ class _LoginFormState extends State<LoginForm> {
           SnackBar(content: Text("Acceso garantizado...",style: TextStyle(fontSize: 14),)),
       );
       Navigator.of(context).pop();
+      Navigator.pushReplacement(
+        parentContext,
+        MaterialPageRoute(builder: (context) => UserPage()),
+      );
     } else {
       ScaffoldMessenger.of(parentContext).showSnackBar(
         SnackBar(content: Text(response.message,style: TextStyle(fontSize: 14),)),
