@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/homePage.dart';
+import 'package:techonvanix/src/page/home/login/loginPage.dart';
+import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,9 +19,13 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(
             builder: (BuildContext context) {
+              print("router: " + settings.name.toString());
               switch (settings.name) {
                 case '/':
-                  return HomePage();
+                  return Userpage();
+                  // return HomePage();
+                case '/login':
+                  return LoginPage();
                 default:
                   return HomePage();
               }

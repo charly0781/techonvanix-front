@@ -20,72 +20,103 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Inicio de Sesión',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Usuario',
-              border: OutlineInputBorder(),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0x8B84A9F3),
+            Color(0x8B46A1E7),
+            Color(0x8B0266FC),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Image.asset(
+                "lib/src/img/manos.png",
+                height: 40,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: 'Contraseña',
-              border: OutlineInputBorder(),
+            Text(
+              'Inicio de Sesión',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            obscureText: true,
-          ),
-          const SizedBox(height: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                },
-                child: Text('¿Olvidaste tu contraseña?'),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: 'Usuario',
+                border: OutlineInputBorder(),
               ),
-              TextButton(
-                onPressed: () {
-                  print("Registrarse");
-                },
-                child: Text('Registrarse'),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
-          const SizedBox(height: 25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  String username = _usernameController.text;
-                  String password = _passwordController.text;
-                  _validatePass(context, username, password);
-
-                },
-                child: Text('Aceptar'),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el formulario
-                },
-                child: Text('Cancelar'),
-              ),
-            ],
-          ),
-        ],
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text('¿Olvidaste tu contraseña?',
+                  style: TextStyle(color: Colors.black),),
+                ),
+                TextButton(
+                  onPressed: () {
+                    print("Registrarse");
+                  },
+                  child: Text('Registrarse',
+                    style: TextStyle(color: Colors.black),),
+                ),
+              ],
+            ),
+            const SizedBox(height: 45),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    String username = _usernameController.text;
+                    String password = _passwordController.text;
+                    _validatePass(context, username, password);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white
+                  ),
+                  child: Text('Aceptar',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cierra el formulario
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white70
+                  ),
+                  child: Text('Cancelar',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

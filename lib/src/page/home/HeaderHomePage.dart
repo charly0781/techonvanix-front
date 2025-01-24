@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/login/LoginForm.dart';
-
 import '../../process/dto/GlobalData.dart';
 import '../transversal/DynamicImageLoader.dart';
-import '../transversal/MessageDialog.dart';
+
 
 class HeaderHomePage extends StatelessWidget {
   const HeaderHomePage({Key? key}) : super(key: key);
