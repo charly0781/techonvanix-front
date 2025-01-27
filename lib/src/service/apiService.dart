@@ -21,12 +21,14 @@ class ApiServicio {
       ...?customHeaders,
     };
 
-    // Manejar la URL con reemplazo de parámetros
     String urlFinal = endpoint;
     if (parametros != null && endpoint.contains("#")) {
       urlFinal = _reemplazarParametros(endpoint, parametros);
     }
     final uri = Uri.parse('$baseUrl$urlFinal');
+
+    print("Peticion " + tipoPeticion.toString());
+    print("URL  " + uri.toString());
 
     // Determinar la petición según tipoPeticion
     switch (tipoPeticion.toUpperCase()) {

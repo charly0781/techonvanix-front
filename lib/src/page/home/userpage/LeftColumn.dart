@@ -1,7 +1,9 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/process/dto/GlobalData.dart';
+import 'package:techonvanix/src/service/EnumServicio.dart';
+import '../../../process/dto/ApiResponse.dart';
+import '../../../service/Utilitarios.dart';
 
 class LeftColumn extends StatefulWidget {
   @override
@@ -10,16 +12,62 @@ class LeftColumn extends StatefulWidget {
 
 class _LeftColumnState extends State<LeftColumn> {
   bool isExpanded = true;
-  List<String> types = ["Type 1", "Type 2", "Type 3"];
-  List<String> templates = [];
-  Map<String, List<String>> typeTemplates = {
-    "Type 1": ["Template 1.1", "Template 1.2"],
-    "Type 2": ["Template 2.1", "Template 2.2"],
-    "Type 3": ["Template 3.1", "Template 3.2"],
-  };
-  List<String> fields = [];
+
+  List<Map<String, Object>> types =
+    [{"id": 0,
+      "nombre": "Sin Datos",
+      "codigo" : "TL_DATO"}];
+
+  List<Map<String, Object>> templates = [];
   String? selectedType;
   String? selectedTemplate;
+  List<String> fields = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTypes();
+  }
+
+  void _loadTypes() {
+    Map<String, String> replacements = {"codigo": "TC_PLANTILLA"};
+    Utilitarios.realizarPeticion(tipoPeticion: EnumParam.GET.value,
+        codigo: "getTipoCategoria", parametros: replacements,
+        token: GlobalData.token).then((respuesta) {
+      if (respuesta.code == 200 && respuesta.body != null) {
+
+        String codigo = respuesta.body[0]["codigo"];
+        replacements = {"code": codigo};
+
+        // Llamar a otro servicio si es necesario
+        Utilitarios.realizarPeticion(tipoPeticion: EnumParam.GET.value,
+            codigo: "getTypoByCat",
+            parametros: replacements,
+            token: GlobalData.token).then((response) {
+          if (response.code == 200 && response.body != null) {
+            setState(() {
+              types.clear();
+              for (Map<String, dynamic> data in response.body) {
+                types.add(data.map((key, value) => MapEntry(key, value as Object)));
+              }
+            });
+          } else {
+            return ApiResponse(
+              code: response.code,
+              message: response.message,
+              body: null,
+            );
+          }
+        });
+
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(respuesta.message)),);
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +101,20 @@ class _LeftColumnState extends State<LeftColumn> {
               onChanged: (value) {
                 setState(() {
                   selectedType = value;
-                  templates = typeTemplates[value!] ?? [];
+                  templates = [];
                   selectedTemplate = null;
-                  fields = [];
                 });
+                int selectedTypeId = types
+                    .firstWhere(
+                      (type) => type['id'].toString() == value,
+                  orElse: () => {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
+                )['id'] as int;
+                _loadTemplates(selectedTypeId);
               },
               items: types.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type),
+                return DropdownMenuItem<String>(
+                  value: type['id'].toString(),
+                  child: Text(type['nombre'].toString()),
                 );
               }).toList(),
             ),
@@ -72,13 +125,16 @@ class _LeftColumnState extends State<LeftColumn> {
                 onChanged: (value) {
                   setState(() {
                     selectedTemplate = value;
-                    fields = List.generate(5, (index) => "Field \${index + 1}");
+                    fields = List.generate(5, (index) => "Field ${index + 1}");
                   });
                 },
                 items: templates.map((template) {
-                  return DropdownMenuItem(
-                    value: template,
-                    child: Text(template),
+                  return DropdownMenuItem<String>(
+                    value: template['id'].toString(),
+                    child: Text(template['titulo'].toString().substring(0,
+                  template['titulo'].toString().length > 28
+                      ? 28
+                      : template['titulo'].toString().length )),
                   );
                 }).toList(),
               ),
@@ -102,7 +158,7 @@ class _LeftColumnState extends State<LeftColumn> {
               ),
             ElevatedButton(
               onPressed: () {
-                print("Preview generated for \$selectedTemplate");
+                print("Preview generated for $selectedTemplate");
               },
               child: Text("Preview"),
             ),
@@ -111,4 +167,33 @@ class _LeftColumnState extends State<LeftColumn> {
       ),
     );
   }
+
+
+  void _loadTemplates(int typeId) {
+    Map<String, String> replacements = {"idType": typeId.toString()};
+    Utilitarios.realizarPeticion(
+      tipoPeticion: EnumParam.GET.value,
+      codigo: "getTemplatebyType",
+      parametros: replacements,
+      token: GlobalData.token,
+    ).then((response) {
+      if (response.code == 200 && response.body != null) {
+        setState(() {
+          templates.clear();
+          for (Map<String, dynamic> data in response.body) {
+            templates.add(data.map((key, value) => MapEntry(key, value ?? '')));
+          }
+        });
+      } else {
+        // Manejo de error: Plantillas vacías
+        setState(() {
+          templates.clear();
+          templates = [{"id": 0,
+            "titulo": "Sin Datos",
+            "codigo" : "TL_DATO"}];
+        });
+      }
+    });
+  }
+
 }
