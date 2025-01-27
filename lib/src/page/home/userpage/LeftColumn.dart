@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/process/dto/GlobalData.dart';
@@ -17,7 +19,7 @@ class _LeftColumnState extends State<LeftColumn> {
     [{"id": 0,
       "nombre": "Sin Datos",
       "codigo" : "TL_DATO"}];
-
+  final Map<String, TextEditingController> _controllers = {};
   List<Map<String, Object>> templates = [];
   Map<String, Object> template = {};
   String? selectedType;
@@ -29,6 +31,14 @@ class _LeftColumnState extends State<LeftColumn> {
   void initState() {
     super.initState();
     _loadTypes();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   void _loadTypes() {
@@ -74,7 +84,7 @@ class _LeftColumnState extends State<LeftColumn> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 400),
-      width: isExpanded ? 300 : 50,
+      width: isExpanded ? 250 : 50,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -165,6 +175,7 @@ class _LeftColumnState extends State<LeftColumn> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
+                                controller: _controllers.putIfAbsent(field, () => TextEditingController()),
                                 decoration: InputDecoration(
                                   labelText: field,
                                   border: OutlineInputBorder(),
@@ -186,7 +197,20 @@ class _LeftColumnState extends State<LeftColumn> {
               ),
             ElevatedButton(
               onPressed: () {
-                print("Preview generated for $selectedTemplate");
+                // Obtener los valores ingresados en cada campo
+                Map<String, String> userValues = {};
+                for (String field in fields) {
+                  userValues[field] = _controllers[field]?.text ?? "";
+                }
+
+                String html = utf8.decode((template["formatoHtml"] as String).runes.toList());
+
+                userValues.forEach((key, value) {
+                  html = html.replaceAll("[$key]", value.isNotEmpty ? value : "");
+                });
+                List<int> utf8Bytes = utf8.encode(html);
+                String utf8Html = utf8.decode(utf8Bytes);
+                print(utf8Html);
               },
               child: Text("Preview"),
             ),
@@ -226,6 +250,8 @@ class _LeftColumnState extends State<LeftColumn> {
   }
 
   List<String> getDataReplace(String? value) {
+
+    template.clear;
 
     template = templates
         .firstWhere(

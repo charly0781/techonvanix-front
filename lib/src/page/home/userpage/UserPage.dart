@@ -33,7 +33,7 @@ class UserPage extends StatelessWidget {
         children: [
           LeftColumn(),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: RightColumn(),
           ),
         ],
