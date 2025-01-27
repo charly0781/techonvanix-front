@@ -8,6 +8,9 @@ import '../../../process/dto/ApiResponse.dart';
 import '../../../service/Utilitarios.dart';
 
 class LeftColumn extends StatefulWidget {
+  final Function(String) onPreviewGenerated;
+  LeftColumn({required this.onPreviewGenerated});
+
   @override
   _LeftColumnState createState() => _LeftColumnState();
 }
@@ -197,7 +200,6 @@ class _LeftColumnState extends State<LeftColumn> {
               ),
             ElevatedButton(
               onPressed: () {
-                // Obtener los valores ingresados en cada campo
                 Map<String, String> userValues = {};
                 for (String field in fields) {
                   userValues[field] = _controllers[field]?.text ?? "";
@@ -210,7 +212,8 @@ class _LeftColumnState extends State<LeftColumn> {
                 });
                 List<int> utf8Bytes = utf8.encode(html);
                 String utf8Html = utf8.decode(utf8Bytes);
-                print(utf8Html);
+                widget.onPreviewGenerated(utf8Html);
+
               },
               child: Text("Preview"),
             ),

@@ -6,7 +6,14 @@ import 'LeftColumn.dart';
 import 'RightColumn.dart';
 
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
+  String generatedHtml = ""; // Variable para almacenar el HTML generado
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +38,16 @@ class UserPage extends StatelessWidget {
       ),
       body: Row(
         children: [
-          LeftColumn(),
+          LeftColumn(
+            onPreviewGenerated: (html) {
+              setState(() {
+                generatedHtml = html;
+              });
+            },
+          ),
           Expanded(
             flex: 3,
-            child: RightColumn(),
+            child: RightColumn(htmlContent: generatedHtml),
           ),
         ],
       ),

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
               switch (settings.name) {
                 case '/':
                   // return UserPage();
-                  return UserPage();
+                  return HomePage();
                 case '/userPage':
                   return UserPage();
                 default:
