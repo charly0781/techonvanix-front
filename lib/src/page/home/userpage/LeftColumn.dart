@@ -12,13 +12,14 @@ class LeftColumn extends StatefulWidget {
 
 class _LeftColumnState extends State<LeftColumn> {
   bool isExpanded = true;
-
+  final ScrollController _scrollController = ScrollController();
   List<Map<String, Object>> types =
     [{"id": 0,
       "nombre": "Sin Datos",
       "codigo" : "TL_DATO"}];
 
   List<Map<String, Object>> templates = [];
+  Map<String, Object> template = {};
   String? selectedType;
   String? selectedTemplate;
   List<String> fields = [];
@@ -53,6 +54,7 @@ class _LeftColumnState extends State<LeftColumn> {
               }
             });
           } else {
+            _showErrorSnackbar(response.message);
             return ApiResponse(
               code: response.code,
               message: response.message,
@@ -62,8 +64,7 @@ class _LeftColumnState extends State<LeftColumn> {
         });
 
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(respuesta.message)),);
+        _showErrorSnackbar(respuesta.message);
       }
     });
   }
@@ -72,8 +73,8 @@ class _LeftColumnState extends State<LeftColumn> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      width: isExpanded ? 250 : 50,
+      duration: Duration(milliseconds: 400),
+      width: isExpanded ? 300 : 50,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -84,6 +85,7 @@ class _LeftColumnState extends State<LeftColumn> {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           IconButton(
             icon: Icon(isExpanded ? Icons.arrow_back : Icons.arrow_forward),
@@ -107,7 +109,8 @@ class _LeftColumnState extends State<LeftColumn> {
                 int selectedTypeId = types
                     .firstWhere(
                       (type) => type['id'].toString() == value,
-                  orElse: () => {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
+                  orElse: () =>
+                  {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
                 )['id'] as int;
                 _loadTemplates(selectedTypeId);
               },
@@ -125,34 +128,59 @@ class _LeftColumnState extends State<LeftColumn> {
                 onChanged: (value) {
                   setState(() {
                     selectedTemplate = value;
-                    fields = List.generate(5, (index) => "Field ${index + 1}");
+                    fields = getDataReplace(value);
                   });
                 },
                 items: templates.map((template) {
                   return DropdownMenuItem<String>(
                     value: template['id'].toString(),
-                    child: Text(template['titulo'].toString().substring(0,
-                  template['titulo'].toString().length > 28
-                      ? 28
-                      : template['titulo'].toString().length )),
+                    child: Text(
+                      template['titulo'].toString().substring(
+                        0,
+                        template['titulo'].toString().length > 28
+                            ? 28
+                            : template['titulo'].toString().length,
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
             if (fields.isNotEmpty)
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: fields.map((field) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            labelText: field,
-                            border: OutlineInputBorder(),
-                          ),
+                child: Card(
+                  margin: EdgeInsets.all(10),
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Scrollbar(
+                      controller: _scrollController,
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: fields.map((field) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  labelText: field,
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue, // Resaltar el borde
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -185,15 +213,39 @@ class _LeftColumnState extends State<LeftColumn> {
           }
         });
       } else {
-        // Manejo de error: Plantillas vacías
+        _showErrorSnackbar(response.message);
         setState(() {
           templates.clear();
           templates = [{"id": 0,
             "titulo": "Sin Datos",
-            "codigo" : "TL_DATO"}];
+            "codigo" : "TL_DATO",
+            "replaceData": ""}];
         });
       }
     });
+  }
+
+  List<String> getDataReplace(String? value) {
+
+    template = templates
+        .firstWhere(
+            (x) => x["id"].toString() == value.toString());
+
+    String dataReplace = templates
+        .firstWhere(
+          (x) => x["id"].toString() == value.toString(),
+      orElse: () => {
+        "replaceData": "",
+      },
+    )['replaceData'] as String? ?? "";
+
+    fields.clear();
+    return dataReplace.isNotEmpty ? dataReplace.split(",") : [];
+  }
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
 }

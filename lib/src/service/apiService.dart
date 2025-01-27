@@ -27,8 +27,8 @@ class ApiServicio {
     }
     final uri = Uri.parse('$baseUrl$urlFinal');
 
-    print("Peticion " + tipoPeticion.toString());
-    print("URL  " + uri.toString());
+    // print("Peticion " + tipoPeticion.toString());
+    // print("URL  " + uri.toString());
 
     // Determinar la petición según tipoPeticion
     switch (tipoPeticion.toUpperCase()) {
