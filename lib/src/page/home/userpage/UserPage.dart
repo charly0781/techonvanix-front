@@ -12,7 +12,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  String generatedHtml = ""; // Variable para almacenar el HTML generado
+  String generatedHtml = "";
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:techonvanix/src/page/errorpage/NotFoundPage.dart';
 import 'package:techonvanix/src/page/home/homePage.dart';
 import 'package:techonvanix/src/page/home/login/loginPage.dart';
 import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
+import 'package:techonvanix/src/process/dto/GlobalData.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
                   // return UserPage();
                   return HomePage();
                 case '/userPage':
-                  return UserPage();
+                  return  UserPage();
                 default:
                   return NotFoundPage();
               }
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       },
       routes: {
         '/home': (context) => const HomePage(),
-        '/userPage': (context) => UserPage(),
+        '/userPage': (context) =>  UserPage(),
         '/NotFoundPage': (context) => NotFoundPage(),
       },
     );
