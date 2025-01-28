@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/errorpage/NotFoundPage.dart';
 import 'package:techonvanix/src/page/home/homePage.dart';
 import 'package:techonvanix/src/page/home/login/loginPage.dart';
 import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
@@ -15,22 +16,27 @@ class MyApp extends StatelessWidget {
         hintColor: Colors.black,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/home',
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(
             builder: (BuildContext context) {
               print("router: " + settings.name.toString());
               switch (settings.name) {
-                case '/':
+                case '/home':
                   // return UserPage();
                   return HomePage();
                 case '/userPage':
                   return UserPage();
                 default:
-                  return HomePage();
+                  return NotFoundPage();
               }
-            }
+            },
         );
+      },
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/userPage': (context) => UserPage(),
+        '/NotFoundPage': (context) => NotFoundPage(),
       },
     );
   }
