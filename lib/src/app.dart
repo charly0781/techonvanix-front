@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:techonvanix/src/page/errorpage/NotFoundPage.dart';
+import 'package:techonvanix/src/page/dinamicPage/AccountActivationPage.dart';
+import 'package:techonvanix/src/page/dinamicPage/NotFoundPage.dart';
 import 'package:techonvanix/src/page/home/homePage.dart';
-import 'package:techonvanix/src/page/home/login/loginPage.dart';
-import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
-import 'package:techonvanix/src/process/dto/GlobalData.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,25 +18,37 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       onGenerateRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-            builder: (BuildContext context) {
-              print("router: " + settings.name.toString());
-              switch (settings.name) {
-                case '/home':
-                  // return UserPage();
-                  return HomePage();
-                case '/userPage':
-                  return  UserPage();
-                default:
-                  return NotFoundPage();
-              }
-            },
-        );
+        List<String>? names = settings.name?.split('?').toList();
+        // print("router: " + names.toString());
+
+        switch (names?[0]) {
+          case '/home':
+            return MaterialPageRoute(builder: (context) => HomePage());
+
+          case '/AccountActivation':
+            String data = "";
+            if (names!.length > 1) {
+              data = names[1].replaceFirst("data=", "");
+            }
+            if (data.isNotEmpty) {
+              print("arguments " + data);
+              return MaterialPageRoute(
+                builder: (context) => AccountActivationPage(
+                  encryptedData: data
+                ),
+              );
+            }
+            return MaterialPageRoute(builder: (context) => NotFoundPage());
+
+          default:
+            return MaterialPageRoute(builder: (context) => NotFoundPage());
+        }
       },
       routes: {
         '/home': (context) => const HomePage(),
-        '/userPage': (context) =>  UserPage(),
+        // '/userPage': (context) =>  UserPage(),
         '/NotFoundPage': (context) => NotFoundPage(),
+        '/AccountActivation': (context) => AccountActivationPage(encryptedData: ""),
       },
     );
   }

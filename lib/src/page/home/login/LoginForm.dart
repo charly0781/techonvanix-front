@@ -141,7 +141,9 @@ class _LoginFormState extends State<LoginForm> {
       Navigator.of(context).pop();
       Navigator.pushReplacement(
         parentContext,
-        MaterialPageRoute(builder: (context) => UserPage()),
+        MaterialPageRoute(builder: (context) => UserPage(
+          token: GlobalData.token,
+          userName: username,)),
       );
     } else {
       ScaffoldMessenger.of(parentContext).showSnackBar(

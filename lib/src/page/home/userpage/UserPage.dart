@@ -7,6 +7,10 @@ import 'RightColumn.dart';
 
 
 class UserPage extends StatefulWidget {
+
+
+  UserPage({required String token, required String userName});
+
   @override
   _UserPageState createState() => _UserPageState();
 }
