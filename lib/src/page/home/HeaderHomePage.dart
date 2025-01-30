@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/login/LoginForm.dart';
+import 'package:techonvanix/src/page/home/userpage/RegisterPageForm.dart';
 import '../../process/dto/GlobalData.dart';
 import '../transversal/DynamicImageLoader.dart';
 
@@ -80,7 +81,7 @@ class HeaderHomePage extends StatelessWidget {
 
   // Método para construir los elementos del menú
   List<Widget> _buildMenuItems(BuildContext context) {
-    List<String> menuItems = ['Precios', 'Empresa', 'Herramientas', 'Contáctanos'];
+    List<String> menuItems = ['Precios', 'Empresa', 'Herramientas'];
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -92,21 +93,39 @@ class HeaderHomePage extends StatelessWidget {
     }).toList();
   }
 
-  // Método para el item de Login en el Header
+
   Widget _buildLoginItem(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextButton(
-        onPressed: () {
-          _onLoginClick(context);
-        },
-        child: const Text(
-          'Login',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+            onPressed: () {
+              _onLoginClick(context);
+            },
+            child: const Text(
+              'Login',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterPageForm()),
+              );
+            },
+            child: const Text(
+              'Registro',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
       ),
     );
   }
+
 
   void _onLoginClick(BuildContext context) {
     showDialog(
