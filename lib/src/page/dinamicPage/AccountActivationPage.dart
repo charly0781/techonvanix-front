@@ -1,4 +1,6 @@
+import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/service/EnumServicio.dart';
 import 'package:techonvanix/src/service/Utilitarios.dart';
@@ -23,13 +25,13 @@ class _AccountActivationPageState extends State<AccountActivationPage> {
   Map<String, Object> account = {};
   bool isLoading = true;
   bool activationSuccess = false;
+  int code = 0;
   String errorMensaje = "";
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _activateAccount();
-    });
+    _activateAccount();
+    isLoading = false;
   }
 
   Future<void> _activateAccount() async {
@@ -41,22 +43,18 @@ class _AccountActivationPageState extends State<AccountActivationPage> {
           parametros: replacements,
           token: GlobalData.token).then((response) {
 
+        setState(() {
           activationSuccess = false;
-        if (response.code == 200 && response.body != null) {
-          print(response.body);
-          account = response.body;
-          activationSuccess = true;
-        } else {
-          errorMensaje = response.message.toString();
-          activationSuccess = false;
-          /*MessageDialog.showMessage(context, title: "Error",
-              message: response.message, confirmButtonText: "Aceptar");
-          Navigator.pop(context);
-          Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );*/
-        }
-        isLoading = false;
+          code = response.code;
+          if (code == 200 && response.body != null) {
+            print(response.body);
+            account = response.body;
+            activationSuccess = true;
+          } else {
+            errorMensaje = response.message.toString();
+            activationSuccess = false;
+          }
+        });
       });
 
     } catch (e) {
@@ -136,10 +134,34 @@ class _AccountActivationPageState extends State<AccountActivationPage> {
         ),
         SizedBox(height: 10),
         Text(
-          'Por favor, intenta nuevamente más tarde. \n' + errorMensaje,
+          errorMensaje + (code == 200038
+              ? '\nPor favor solicita uno nuevo haciendo click aquí.'
+              : '\nPor favor, intenta nuevamente más tarde.'),
           style: TextStyle(fontSize: 18),
         ),
+        if (code == 200038)
+          GestureDetector(
+            onTap: () {
+              _handleRequestNewAccount();
+            },
+            child: Text(
+              'Hacer clic aquí',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 18,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
       ],
     );
   }
+
+// Método que se llama al hacer clic
+  void _handleRequestNewAccount() {
+    // Aquí implementas la lógica para generar el enlace o realizar la acción que desees.
+    print('Solicitar nuevo enlace o realizar alguna acción');
+    // Puedes retornar el mensaje o el enlace aquí según la lógica que necesites.
+  }
+
 }
