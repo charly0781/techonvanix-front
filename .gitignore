@@ -39,5 +39,9 @@ app.*.map.json
 
 # Android Studio will place build artifacts here
 /android/app/debug
+/android/app/src/main/res/mipmap-anydpi-v26/
 /android/app/profile
 /android/app/release
+
+#ios
+ios/Runner/Assets.xcassets/AppIcon.appiconset/
