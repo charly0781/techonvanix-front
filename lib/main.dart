@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:techonvanix/src/app.dart';
 import 'package:techonvanix/src/process/dto/GlobalData.dart';
 import 'package:techonvanix/src/service/ApiService.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setUrlStrategy(PathUrlStrategy());
+  // setUrlStrategy(PathUrlStrategy());
 
-  const baseUrl = 'http://back.techonvanix.com';
+  const baseUrl = 'https://back.techonvanix.com';
   final apiServicio = ApiServicio(baseUrl: baseUrl);
 
   try {

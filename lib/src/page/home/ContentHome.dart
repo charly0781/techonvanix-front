@@ -60,7 +60,8 @@ class _ContentHomeState extends State<ContentHome> {
         title = data['title'] ?? title;
         content = data['content'] ?? content;
         contentItems = List<Map<String, dynamic>>.from(
-          data['menu']?.where((element) => element['active'] == true) ?? [],
+          data['menu']?.where((element) => element['active'] == true
+              && element['tipo'] == 'H') ?? [],
         );
       });
     }

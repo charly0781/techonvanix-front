@@ -144,19 +144,5 @@ class HeaderHomePage extends StatelessWidget {
         );
       },
     );
-    // MessageDialog.showMessage(
-    //   context,
-    //   title: "Informacion",
-    //   message: "Proyecto en construccion...",
-    //   confirmButtonText: "Ok",
-    //   onConfirm: () {
-    //     Navigator.of(context).pop(); // Cierra el diálogo
-    //     print("Botón Sí presionado");
-    //   },
-    //   onCancel: () {
-    //     Navigator.of(context).pop(); // Cierra el diálogo
-    //     print("Botón No presionado");
-    //   },
-    // );
   }
 }
