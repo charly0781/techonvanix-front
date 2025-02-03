@@ -356,18 +356,21 @@ class _LeftColumnState extends State<LeftColumn> {
   }
 
   Future<void> _seleccionarAdjuntos() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (result != null) {
       setState(() {
-        listaAdjuntos = result.files.map((file) {
+        listaAdjuntos.addAll(result.files.map((file) {
+
           return AdjuntosDto(
-            file: base64Encode(File(file.path!).readAsBytesSync()),
+            file: file.bytes != null ? base64Encode(file.bytes!) : '',
             formato: file.extension ?? "desconocido",
             nombre: file.name,
           );
-        }).toList();
+        }).toList());
       });
     }
   }
+
+
+
 }
