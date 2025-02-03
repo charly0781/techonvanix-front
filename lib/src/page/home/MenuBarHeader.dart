@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/transversal/CustomIcons.dart';
 
 
 class MenuBarHeader extends StatefulWidget {
@@ -17,24 +18,15 @@ class MenuBarHeader extends StatefulWidget {
 
 class _MenuBarHeaderState extends State<MenuBarHeader> {
 
-  IconData _getIconFromHex(String hex) {
-    try {
-      int hexValue = int.parse(hex, radix: 16);  // Intentar convertir a entero
-      return IconData(hexValue, fontFamily: 'MaterialIcons');
-    } catch (e) {
-      print('Error al convertir el hexadecimal: $hex');
-      return Icons.error; // Devuelve un ícono por defecto si hay un error
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: widget.drawerList.map((menu) {
         return ListTile(
+
           leading: menu['urlImage'] != null
               ? Icon(
-            _getIconFromHex(menu['urlImage']),
+            CustomIcons.getIconFromName(menu['urlImage']),
             size: 24,
             color: Colors.blue,
           )
@@ -49,3 +41,4 @@ class _MenuBarHeaderState extends State<MenuBarHeader> {
     );
   }
 }
+
