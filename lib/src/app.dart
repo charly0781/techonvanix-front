@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/dto/library/GlobalData.dart';
 import 'package:techonvanix/src/page/dinamicPage/AccountActivationPage.dart';
 import 'package:techonvanix/src/page/dinamicPage/NotFoundPage.dart';
 import 'package:techonvanix/src/page/home/homePage.dart';
+import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -23,8 +25,11 @@ class MyApp extends StatelessWidget {
 
         switch (names?[0]) {
           case '/home':
-            return MaterialPageRoute(builder: (context) => HomePage());
-
+            // return MaterialPageRoute(builder: (context) => HomePage());
+            return MaterialPageRoute(builder: (context) => UserPage(
+              token: GlobalData.token,
+              userName: 'carlosRios@techonvanix.com',
+            ));
           case '/AccountActivation':
             String data = "";
             if (names!.length > 1) {
@@ -45,8 +50,11 @@ class MyApp extends StatelessWidget {
         }
       },
       routes: {
-        '/home': (context) => const HomePage(),
-        // '/userPage': (context) =>  UserPage(),
+        // '/home': (context) => const HomePage(),
+        '/userPage': (context) =>  UserPage(
+          token: GlobalData.token,
+          userName: 'carlosRios@techonvanix.com',
+        ),
         '/NotFoundPage': (context) => NotFoundPage(),
         '/AccountActivation': (context) => AccountActivationPage(encryptedData: ""),
       },

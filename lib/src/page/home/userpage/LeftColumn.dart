@@ -132,11 +132,13 @@ class _LeftColumnState extends State<LeftColumn> {
                   selectedType = value;
                   templates = [];
                   selectedTemplate = null;
+                  listaAdjuntos.clear();
+                  _controllers.clear();
                 });
                 int selectedTypeId = types.firstWhere(
-                      (type) => type['id'].toString() == value,
+                  (type) => type['id'].toString() == value,
                   orElse: () =>
-                  {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
+                      {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
                 )['id'] as int;
                 _loadTemplates(selectedTypeId);
               },
@@ -155,6 +157,8 @@ class _LeftColumnState extends State<LeftColumn> {
                   setState(() {
                     selectedTemplate = value;
                     fields = getDataReplace(value);
+                    listaAdjuntos.clear();
+                    _controllers.clear();
                   });
                 },
                 items: templates.map((template) {
@@ -162,109 +166,17 @@ class _LeftColumnState extends State<LeftColumn> {
                     value: template['id'].toString(),
                     child: Text(
                       template['titulo'].toString().substring(
-                        0,
-                        template['titulo'].toString().length > 28
-                            ? 28
-                            : template['titulo'].toString().length,
-                      ),
+                            0,
+                            template['titulo'].toString().length > 28
+                                ? 28
+                                : template['titulo'].toString().length,
+                          ),
                     ),
                   );
                 }).toList(),
               ),
-            if (fields.isNotEmpty)
-              Column(
-                children: [
-                  Card(
-                    margin: EdgeInsets.all(10),
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                asunto = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: "Asunto",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: _seleccionarAdjuntos,
-                            child: Text("Seleccionar Archivos"),
-                          ),
-                          if (listaAdjuntos.isNotEmpty)
-                            Column(
-                              children: listaAdjuntos.map((adjunto) {
-                                return ListTile(
-                                  title: Text(adjunto.nombre),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () {
-                                      setState(() {
-                                        listaAdjuntos.remove(adjunto);
-                                      });
-                                    },
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (_controllers.isNotEmpty)
-                    Expanded(
-                      child: Card(
-                        margin: EdgeInsets.all(10),
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Scrollbar(
-                            controller: _scrollController,
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              controller: _scrollController,
-                              child: Column(
-                                children: _controllers.entries.map((entry) {
-                                  return Padding(
-                                    padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                    child: TextField(
-                                      controller: entry.value,
-                                      decoration: InputDecoration(
-                                        labelText: entry.key,
-                                        border: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.blue,
-                                            width: 2.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            Expanded(
-              child: Card(
+            if (selectedTemplate != null) ...[
+              Card(
                 margin: EdgeInsets.all(10),
                 elevation: 5,
                 shape: RoundedRectangleBorder(
@@ -272,69 +184,120 @@ class _LeftColumnState extends State<LeftColumn> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Scrollbar(
-                    controller: _scrollController,
-                    thumbVisibility: true,
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        children: fields.map((field) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: TextField(
-                              controller: _controllers.putIfAbsent(
-                                  field, () => TextEditingController()),
-                              decoration: InputDecoration(
-                                labelText: field,
-                                border: OutlineInputBorder(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.blue,
-                                    width: 2.0,
+                  child: Column(
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            asunto = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Asunto",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _seleccionarAdjuntos,
+                        child: Text("Seleccionar Archivos"),
+                      ),
+                      if (listaAdjuntos.isNotEmpty)
+                        Column(
+                          children: listaAdjuntos.map((adjunto) {
+                            return ListTile(
+                              title: Text(adjunto.nombre),
+                              trailing: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    listaAdjuntos.remove(adjunto);
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              if (fields.isNotEmpty)
+                Expanded(
+                  child: Card(
+                    margin: EdgeInsets.all(10),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Scrollbar(
+                        controller: _scrollController,
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Column(
+                            children: fields.map((field) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TextField(
+                                  controller: _controllers.putIfAbsent(
+                                      field, () => TextEditingController()),
+                                  decoration: InputDecoration(
+                                    labelText: field,
+                                    border: OutlineInputBorder(),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.blue,
+                                        width: 2.0,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ElevatedButton(
+                onPressed: () {
+                  Map<String, String> userValues = {};
+                  widget.sendMail.usaHTML = true;
+                  widget.sendMail.replaceData = "";
+                  widget.sendMail.replaceData =
+                      template['replaceData'] as String;
+
+                  for (String field in fields) {
+                    userValues[field] = _controllers[field]?.text ?? "";
+                  }
+
+                  widget.sendMail.data = userValues;
+                  String html = utf8.decode(
+                      (template["formatoHtml"] as String).runes.toList());
+
+                  userValues.forEach((key, value) {
+                    html = html.replaceAll(
+                        "[$key]", value.isNotEmpty ? value : "");
+                  });
+                  List<int> utf8Bytes = utf8.encode(html);
+                  String utf8Html = utf8.decode(utf8Bytes);
+
+                  widget.sendMail.body = html;
+                  widget.onPreviewGenerated(utf8Html);
+                },
+                child: Text("Preview"),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Map<String, String> userValues = {};
-                widget.sendMail.usaHTML = true;
-                widget.sendMail.replaceData = "";
-                widget.sendMail.replaceData = template['replaceData'] as String;
-
-                for (String field in fields) {
-                  userValues[field] = _controllers[field]?.text ?? "";
-                }
-
-                widget.sendMail.data = userValues;
-                String html = utf8
-                    .decode((template["formatoHtml"] as String).runes.toList());
-
-                userValues.forEach((key, value) {
-                  html = html.replaceAll("[$key]", value.isNotEmpty ? value : "");
-                });
-                List<int> utf8Bytes = utf8.encode(html);
-                String utf8Html = utf8.decode(utf8Bytes);
-
-                widget.sendMail.body = html;
-                widget.onPreviewGenerated(utf8Html);
-              },
-              child: Text("Preview"),
-            ),
+            ],
           ],
         ],
       ),
     );
   }
-
 
   void _loadTemplates(int typeId) {
     Map<String, String> replacements = {"idType": typeId.toString()};
