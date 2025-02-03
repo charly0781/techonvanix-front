@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/login/LoginForm.dart';
 import 'package:techonvanix/src/page/home/userpage/RegisterPageForm.dart';
-import '../../process/dto/GlobalData.dart';
+import '../../dto/library/GlobalData.dart';
 import '../transversal/DynamicImageLoader.dart';
 
 

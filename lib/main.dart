@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:techonvanix/src/app.dart';
-import 'package:techonvanix/src/process/dto/GlobalData.dart';
+import 'package:techonvanix/src/dto/library/GlobalData.dart';
 import 'package:techonvanix/src/service/ApiService.dart';
 
 

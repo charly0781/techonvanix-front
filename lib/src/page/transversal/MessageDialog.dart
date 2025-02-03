@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../process/dto/ApiResponse.dart';
+import '../../dto/library/ApiResponse.dart';
 
 
 class MessageDialog {

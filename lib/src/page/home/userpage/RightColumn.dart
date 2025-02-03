@@ -1,11 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class RightColumn extends StatelessWidget {
-  final String htmlContent;
+import '../../../dto/mail/SendMailDto.dart';
 
-  RightColumn({required this.htmlContent});
+class RightColumn extends StatelessWidget {
+
+  final SendMailDto sendMail;
+  final String html;
+
+  RightColumn({
+    required this.sendMail,
+    required this.html
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,7 @@ class RightColumn extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Html(
-                data: htmlContent, // Mostrar el HTML recibido
+                data: html,
                 style: {
                   "html": Style(
                     fontSize: FontSize(16), // Ajustar tamaño de texto

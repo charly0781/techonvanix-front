@@ -1,11 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/service/EnumServicio.dart';
 import 'package:techonvanix/src/service/Utilitarios.dart';
 
-import '../../process/dto/GlobalData.dart';
+import '../../dto/library/GlobalData.dart';
 
 class AccountActivationPage extends StatefulWidget {
 

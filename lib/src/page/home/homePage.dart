@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/ContentHome.dart';
 import 'package:techonvanix/src/page/transversal/PageSelector.dart';
-import '../../process/dto/ApiResponse.dart';
-import '../../process/dto/GlobalData.dart';
+import '../../dto/library/ApiResponse.dart';
+import '../../dto/library/GlobalData.dart';
 import '../../service/Utilitarios.dart';
 import '../transversal/MessageDialog.dart';
 import 'FloatingMenu.dart';

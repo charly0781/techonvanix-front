@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../process/dto/GlobalData.dart';
+import '../../dto/library/GlobalData.dart';
 
 import 'package:flutter/material.dart';
 

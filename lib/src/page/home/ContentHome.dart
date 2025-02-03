@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/ShowTooltip.dart';
 import 'package:techonvanix/src/page/transversal/DynamicImageLoader.dart';
 import 'package:techonvanix/src/page/transversal/MessageDialog.dart';
-import 'package:techonvanix/src/process/dto/ApiResponse.dart';
+import 'package:techonvanix/src/dto/library/ApiResponse.dart';
 import 'package:techonvanix/src/service/Utilitarios.dart';
 
 class ContentHome extends StatefulWidget {

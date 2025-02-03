@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/home/userpage/UserPage.dart';
-import 'package:techonvanix/src/process/dto/GlobalData.dart';
-import '../../../process/dto/ApiResponse.dart';
+import 'package:techonvanix/src/dto/library/GlobalData.dart';
+import '../../../dto/library/ApiResponse.dart';
 import '../../../service/Utilitarios.dart';
 
 class LoginForm extends StatefulWidget {
@@ -134,7 +134,9 @@ class _LoginFormState extends State<LoginForm> {
 
     if (response.code == 200 && response.body != null) {
       final data = response.body;
+      GlobalData.userName = username;
       GlobalData.token = data['token'].toString().replaceFirst("Bearer ", "") ?? "";
+      print ("Token: " + GlobalData.token);
       ScaffoldMessenger.of(parentContext).showSnackBar(
           SnackBar(content: Text("Acceso garantizado...",style: TextStyle(fontSize: 14),)),
       );

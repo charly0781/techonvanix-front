@@ -1,15 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:techonvanix/src/process/dto/GlobalData.dart';
+import 'package:techonvanix/src/dto/library/GlobalData.dart';
+import 'package:techonvanix/src/dto/mail/AdjuntosDto.dart';
+import 'package:techonvanix/src/dto/mail/SendMailDto.dart';
 import 'package:techonvanix/src/service/EnumServicio.dart';
-import '../../../process/dto/ApiResponse.dart';
+import '../../../dto/library/ApiResponse.dart';
 import '../../../service/Utilitarios.dart';
 
 class LeftColumn extends StatefulWidget {
+  final SendMailDto sendMail;
   final Function(String) onPreviewGenerated;
-  LeftColumn({required this.onPreviewGenerated});
+
+  LeftColumn({
+    required this.sendMail,
+    required this.onPreviewGenerated,
+  });
 
   @override
   _LeftColumnState createState() => _LeftColumnState();
@@ -17,18 +26,19 @@ class LeftColumn extends StatefulWidget {
 
 class _LeftColumnState extends State<LeftColumn> {
   bool isExpanded = true;
+  List<AdjuntosDto> listaAdjuntos = [];
+  String asunto = "";
+
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, Object>> types =
-    [{"id": 0,
-      "nombre": "Sin Datos",
-      "codigo" : "TL_DATO"}];
+  List<Map<String, Object>> types = [
+    {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"}
+  ];
   final Map<String, TextEditingController> _controllers = {};
   List<Map<String, Object>> templates = [];
   Map<String, Object> template = {};
   String? selectedType;
   String? selectedTemplate;
   List<String> fields = [];
-
 
   @override
   void initState() {
@@ -46,24 +56,28 @@ class _LeftColumnState extends State<LeftColumn> {
 
   void _loadTypes() {
     Map<String, String> replacements = {"codigo": "TC_PLANTILLA"};
-    Utilitarios.realizarPeticion(tipoPeticion: EnumParam.GET.value,
-        codigo: "getTipoCategoria", parametros: replacements,
-        token: GlobalData.token).then((respuesta) {
+    Utilitarios.realizarPeticion(
+            tipoPeticion: EnumParam.GET.value,
+            codigo: "getTipoCategoria",
+            parametros: replacements,
+            token: GlobalData.token)
+        .then((respuesta) {
       if (respuesta.code == 200 && respuesta.body != null) {
-
         String codigo = respuesta.body[0]["codigo"];
         replacements = {"code": codigo};
 
-        // Llamar a otro servicio si es necesario
-        Utilitarios.realizarPeticion(tipoPeticion: EnumParam.GET.value,
-            codigo: "getTypoByCat",
-            parametros: replacements,
-            token: GlobalData.token).then((response) {
+        Utilitarios.realizarPeticion(
+                tipoPeticion: EnumParam.GET.value,
+                codigo: "getTypoByCat",
+                parametros: replacements,
+                token: GlobalData.token)
+            .then((response) {
           if (response.code == 200 && response.body != null) {
             setState(() {
               types.clear();
               for (Map<String, dynamic> data in response.body) {
-                types.add(data.map((key, value) => MapEntry(key, value as Object)));
+                types.add(
+                    data.map((key, value) => MapEntry(key, value as Object)));
               }
             });
           } else {
@@ -75,13 +89,11 @@ class _LeftColumnState extends State<LeftColumn> {
             );
           }
         });
-
       } else {
         _showErrorSnackbar(respuesta.message);
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +127,13 @@ class _LeftColumnState extends State<LeftColumn> {
               value: selectedType,
               onChanged: (value) {
                 setState(() {
+                  fields = [];
+                  asunto = "";
                   selectedType = value;
                   templates = [];
                   selectedTemplate = null;
                 });
-                int selectedTypeId = types
-                    .firstWhere(
+                int selectedTypeId = types.firstWhere(
                       (type) => type['id'].toString() == value,
                   orElse: () =>
                   {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
@@ -159,61 +172,160 @@ class _LeftColumnState extends State<LeftColumn> {
                 }).toList(),
               ),
             if (fields.isNotEmpty)
-              Expanded(
-                child: Card(
-                  margin: EdgeInsets.all(10),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Column(
+                children: [
+                  Card(
+                    margin: EdgeInsets.all(10),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                asunto = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: "Asunto",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: _seleccionarAdjuntos,
+                            child: Text("Seleccionar Archivos"),
+                          ),
+                          if (listaAdjuntos.isNotEmpty)
+                            Column(
+                              children: listaAdjuntos.map((adjunto) {
+                                return ListTile(
+                                  title: Text(adjunto.nombre),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      setState(() {
+                                        listaAdjuntos.remove(adjunto);
+                                      });
+                                    },
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Scrollbar(
-                      controller: _scrollController,
-                      thumbVisibility: true,
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        child: Column(
-                          children: fields.map((field) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: TextField(
-                                controller: _controllers.putIfAbsent(field, () => TextEditingController()),
-                                decoration: InputDecoration(
-                                  labelText: field,
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.blue, // Resaltar el borde
-                                      width: 2.0,
+                  if (_controllers.isNotEmpty)
+                    Expanded(
+                      child: Card(
+                        margin: EdgeInsets.all(10),
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Scrollbar(
+                            controller: _scrollController,
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              child: Column(
+                                children: _controllers.entries.map((entry) {
+                                  return Padding(
+                                    padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: TextField(
+                                      controller: entry.value,
+                                      decoration: InputDecoration(
+                                        labelText: entry.key,
+                                        border: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.blue,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                      ),
                                     ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            Expanded(
+              child: Card(
+                margin: EdgeInsets.all(10),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        children: fields.map((field) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: TextField(
+                              controller: _controllers.putIfAbsent(
+                                  field, () => TextEditingController()),
+                              decoration: InputDecoration(
+                                labelText: field,
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue,
+                                    width: 2.0,
                                   ),
                                 ),
                               ),
-                            );
-                          }).toList(),
-                        ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
             ElevatedButton(
               onPressed: () {
                 Map<String, String> userValues = {};
+                widget.sendMail.usaHTML = true;
+                widget.sendMail.replaceData = "";
+                widget.sendMail.replaceData = template['replaceData'] as String;
+
                 for (String field in fields) {
                   userValues[field] = _controllers[field]?.text ?? "";
                 }
 
-                String html = utf8.decode((template["formatoHtml"] as String).runes.toList());
+                widget.sendMail.data = userValues;
+                String html = utf8
+                    .decode((template["formatoHtml"] as String).runes.toList());
 
                 userValues.forEach((key, value) {
                   html = html.replaceAll("[$key]", value.isNotEmpty ? value : "");
                 });
                 List<int> utf8Bytes = utf8.encode(html);
                 String utf8Html = utf8.decode(utf8Bytes);
-                widget.onPreviewGenerated(utf8Html);
 
+                widget.sendMail.body = html;
+                widget.onPreviewGenerated(utf8Html);
               },
               child: Text("Preview"),
             ),
@@ -243,38 +355,56 @@ class _LeftColumnState extends State<LeftColumn> {
         _showErrorSnackbar(response.message);
         setState(() {
           templates.clear();
-          templates = [{"id": 0,
-            "titulo": "Sin Datos",
-            "codigo" : "TL_DATO",
-            "replaceData": ""}];
+          templates = [
+            {
+              "id": 0,
+              "titulo": "Sin Datos",
+              "codigo": "TL_DATO",
+              "replaceData": ""
+            }
+          ];
         });
       }
     });
   }
 
   List<String> getDataReplace(String? value) {
-
     template.clear;
 
-    template = templates
-        .firstWhere(
-            (x) => x["id"].toString() == value.toString());
+    template =
+        templates.firstWhere((x) => x["id"].toString() == value.toString());
 
-    String dataReplace = templates
-        .firstWhere(
+    String dataReplace = templates.firstWhere(
           (x) => x["id"].toString() == value.toString(),
-      orElse: () => {
-        "replaceData": "",
-      },
-    )['replaceData'] as String? ?? "";
+          orElse: () => {
+            "replaceData": "",
+          },
+        )['replaceData'] as String? ??
+        "";
 
     fields.clear();
     return dataReplace.isNotEmpty ? dataReplace.split(",") : [];
   }
+
   void _showErrorSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
   }
 
+  Future<void> _seleccionarAdjuntos() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+    if (result != null) {
+      setState(() {
+        listaAdjuntos = result.files.map((file) {
+          return AdjuntosDto(
+            file: base64Encode(File(file.path!).readAsBytesSync()),
+            formato: file.extension ?? "desconocido",
+            nombre: file.name,
+          );
+        }).toList();
+      });
+    }
+  }
 }

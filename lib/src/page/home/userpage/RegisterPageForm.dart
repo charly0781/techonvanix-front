@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../process/dto/GlobalData.dart';
+import '../../../dto/library/GlobalData.dart';
 
 class RegisterPageForm extends StatefulWidget {
   @override

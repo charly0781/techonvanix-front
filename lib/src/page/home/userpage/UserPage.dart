@@ -1,7 +1,7 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:techonvanix/src/dto/library/GlobalData.dart';
+import 'package:techonvanix/src/dto/mail/SendMailDto.dart';
 import 'LeftColumn.dart';
 import 'RightColumn.dart';
 
@@ -16,10 +16,13 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  SendMailDto sendMail = SendMailDto.iniciarClase();
   String generatedHtml = "";
 
   @override
   Widget build(BuildContext context) {
+    sendMail.sender = GlobalData.userName;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("User Management"),
@@ -43,6 +46,7 @@ class _UserPageState extends State<UserPage> {
       body: Row(
         children: [
           LeftColumn(
+            sendMail: sendMail,
             onPreviewGenerated: (html) {
               setState(() {
                 generatedHtml = html;
@@ -51,7 +55,9 @@ class _UserPageState extends State<UserPage> {
           ),
           Expanded(
             flex: 3,
-            child: RightColumn(htmlContent: generatedHtml),
+            child: RightColumn(
+            sendMail: sendMail,
+              html: generatedHtml,),
           ),
         ],
       ),

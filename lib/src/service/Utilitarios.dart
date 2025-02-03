@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:techonvanix/src/process/dto/ApiResponse.dart';
+import 'package:techonvanix/src/dto/library/ApiResponse.dart';
 import 'package:http/http.dart' as http;
-import '../process/dto/GlobalData.dart';
+import '../dto/library/GlobalData.dart';
 import 'ApiService.dart';
 
 class Utilitarios {
