@@ -99,7 +99,7 @@ class _LeftColumnState extends State<LeftColumn> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 350),
-      width: isExpanded ? 280 : 50,
+      width: isExpanded ? 280 : 30,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -206,7 +206,7 @@ class _LeftColumnState extends State<LeftColumn> {
                       SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _seleccionarAdjuntos,
-                        child: Text("Seleccionar Archivos"),
+                        child: Text("Adjuntar Archivos"),
                       ),
                       if (listaAdjuntos.isNotEmpty)
                         Column(
@@ -231,7 +231,7 @@ class _LeftColumnState extends State<LeftColumn> {
               if (fields.isNotEmpty)
                 Expanded(
                   child: Card(
-                    margin: EdgeInsets.all(15),
+                    margin: EdgeInsets.all(10),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -271,35 +271,47 @@ class _LeftColumnState extends State<LeftColumn> {
                   ),
                 ),
               Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Map<String, String> userValues = {};
-                    widget.sendMail.usaHTML = true;
-                    widget.sendMail.attachments = listaAdjuntos;
-                    widget.sendMail.replaceData = "";
-                    widget.sendMail.replaceData = template['replaceData'] as String;
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Map<String, String> userValues = {};
+                        widget.sendMail.usaHTML = true;
+                        widget.sendMail.attachments = listaAdjuntos;
+                        widget.sendMail.replaceData = "";
+                        widget.sendMail.replaceData = template['replaceData'] as String;
 
-                    for (String field in fields) {
-                      userValues[field] = _controllers[field]?.text ?? "";
-                    }
+                        for (String field in fields) {
+                          userValues[field] = _controllers[field]?.text ?? "";
+                        }
 
-                    widget.sendMail.data = userValues;
-                    String html = utf8.decode(
-                        (template["formatoHtml"] as String).runes.toList());
+                        widget.sendMail.data = userValues;
+                        String html = utf8.decode(
+                            (template["formatoHtml"] as String).runes.toList());
 
-                    userValues.forEach((key, value) {
-                      html = html.replaceAll(
-                          "[$key]", value.isNotEmpty ? value : "");
-                    });
-                    List<int> utf8Bytes = utf8.encode(html);
-                    String utf8Html = utf8.decode(utf8Bytes);
+                        userValues.forEach((key, value) {
+                          html = html.replaceAll(
+                              "[$key]", value.isNotEmpty ? value : "");
+                        });
+                        List<int> utf8Bytes = utf8.encode(html);
+                        String utf8Html = utf8.decode(utf8Bytes);
 
-                    widget.sendMail.sender = GlobalData.userName;
-                    widget.sendMail.subject = asunto;
-                    widget.sendMail.body = html;
-                    widget.onPreviewGenerated(utf8Html);
-                  },
-                  child: Text("Preview"),
+                        widget.sendMail.sender = GlobalData.userName;
+                        widget.sendMail.subject = asunto;
+                        widget.sendMail.body = html;
+                        widget.onPreviewGenerated(utf8Html);
+                      },
+                      child: Text("Preview"),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        //Metodo para enviar el correo
+                      },
+                      child: Text("Send"),
+                    ),
+                  ],
                 ),
               ),
             ],
