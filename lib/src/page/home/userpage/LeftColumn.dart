@@ -98,8 +98,8 @@ class _LeftColumnState extends State<LeftColumn> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 400),
-      width: isExpanded ? 250 : 50,
+      duration: Duration(milliseconds: 350),
+      width: isExpanded ? 280 : 50,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -122,62 +122,68 @@ class _LeftColumnState extends State<LeftColumn> {
             },
           ),
           if (isExpanded) ...[
-            DropdownButton<String>(
-              hint: Text("Select Type"),
-              value: selectedType,
-              onChanged: (value) {
-                setState(() {
-                  fields = [];
-                  asunto = "";
-                  selectedType = value;
-                  templates = [];
-                  selectedTemplate = null;
-                  listaAdjuntos.clear();
-                  _controllers.clear();
-                });
-                int selectedTypeId = types.firstWhere(
-                  (type) => type['id'].toString() == value,
-                  orElse: () =>
-                      {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
-                )['id'] as int;
-                _loadTemplates(selectedTypeId);
-              },
-              items: types.map((type) {
-                return DropdownMenuItem<String>(
-                  value: type['id'].toString(),
-                  child: Text(type['nombre'].toString()),
-                );
-              }).toList(),
-            ),
-            if (templates.isNotEmpty)
-              DropdownButton<String>(
-                hint: Text("Select Template"),
-                value: selectedTemplate,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: DropdownButton<String>(
+                hint: Text("Select Type"),
+                value: selectedType,
                 onChanged: (value) {
                   setState(() {
-                    selectedTemplate = value;
-                    fields = getDataReplace(value);
+                    fields = [];
+                    asunto = "";
+                    selectedType = value;
+                    templates = [];
+                    selectedTemplate = null;
                     listaAdjuntos.clear();
                     _controllers.clear();
                   });
+                  int selectedTypeId = types.firstWhere(
+                        (type) => type['id'].toString() == value,
+                    orElse: () =>
+                    {"id": 0, "nombre": "Sin Datos", "codigo": "TL_DATO"},
+                  )['id'] as int;
+                  _loadTemplates(selectedTypeId);
                 },
-                items: templates.map((template) {
+                items: types.map((type) {
                   return DropdownMenuItem<String>(
-                    value: template['id'].toString(),
-                    child: Text(
-                      template['titulo'].toString().substring(
-                            0,
-                            template['titulo'].toString().length > 28
-                                ? 28
-                                : template['titulo'].toString().length,
-                          ),
-                    ),
+                    value: type['id'].toString(),
+                    child: Text(type['nombre'].toString()),
                   );
                 }).toList(),
               ),
+            ),
+            if (templates.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: DropdownButton<String>(
+                  hint: Text("Select Template"),
+                  value: selectedTemplate,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTemplate = value;
+                      fields = getDataReplace(value);
+                      listaAdjuntos.clear();
+                      _controllers.clear();
+                    });
+                  },
+                  items: templates.map((template) {
+                    return DropdownMenuItem<String>(
+                      value: template['id'].toString(),
+                      child: Text(
+                        template['titulo'].toString().substring(
+                          0,
+                          template['titulo'].toString().length > 28
+                              ? 28
+                              : template['titulo'].toString().length,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             if (selectedTemplate != null) ...[
               Card(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 elevation: 5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -225,7 +231,7 @@ class _LeftColumnState extends State<LeftColumn> {
               if (fields.isNotEmpty)
                 Expanded(
                   child: Card(
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(15),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -264,33 +270,37 @@ class _LeftColumnState extends State<LeftColumn> {
                     ),
                   ),
                 ),
-              ElevatedButton(
-                onPressed: () {
-                  Map<String, String> userValues = {};
-                  widget.sendMail.usaHTML = true;
-                  widget.sendMail.replaceData = "";
-                  widget.sendMail.replaceData =
-                      template['replaceData'] as String;
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Map<String, String> userValues = {};
+                    widget.sendMail.usaHTML = true;
+                    widget.sendMail.attachments = listaAdjuntos;
+                    widget.sendMail.replaceData = "";
+                    widget.sendMail.replaceData = template['replaceData'] as String;
 
-                  for (String field in fields) {
-                    userValues[field] = _controllers[field]?.text ?? "";
-                  }
+                    for (String field in fields) {
+                      userValues[field] = _controllers[field]?.text ?? "";
+                    }
 
-                  widget.sendMail.data = userValues;
-                  String html = utf8.decode(
-                      (template["formatoHtml"] as String).runes.toList());
+                    widget.sendMail.data = userValues;
+                    String html = utf8.decode(
+                        (template["formatoHtml"] as String).runes.toList());
 
-                  userValues.forEach((key, value) {
-                    html = html.replaceAll(
-                        "[$key]", value.isNotEmpty ? value : "");
-                  });
-                  List<int> utf8Bytes = utf8.encode(html);
-                  String utf8Html = utf8.decode(utf8Bytes);
+                    userValues.forEach((key, value) {
+                      html = html.replaceAll(
+                          "[$key]", value.isNotEmpty ? value : "");
+                    });
+                    List<int> utf8Bytes = utf8.encode(html);
+                    String utf8Html = utf8.decode(utf8Bytes);
 
-                  widget.sendMail.body = html;
-                  widget.onPreviewGenerated(utf8Html);
-                },
-                child: Text("Preview"),
+                    widget.sendMail.sender = GlobalData.userName;
+                    widget.sendMail.subject = asunto;
+                    widget.sendMail.body = html;
+                    widget.onPreviewGenerated(utf8Html);
+                  },
+                  child: Text("Preview"),
+                ),
               ),
             ],
           ],

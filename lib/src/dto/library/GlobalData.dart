@@ -8,8 +8,8 @@ class GlobalData {
   static Map<String, dynamic>? companyData;
   static List<dynamic>? allUrls;
   static List<dynamic>? allMenus;
-  static String token = "";
-  static String userName = "";
+  static String token = "eyJhbGciOiJIUzI1NiJ9.eyJlc3RhZG8iOiJBQ1RJVk8iLCJyb2xlIjoiU1VQUE9SVCIsImNvbXBhbmlhIjo5OSwidXNlck5hbWUiOiJuby1yZXBseUB0ZWNob252YW5peC5jb20iLCJpYXQiOjE3Mzg3NTc1NTksImV4cCI6MTczODg0Mzk1OX0.g2C9SZqNGezz6J1FY1K6s4L32Gv7OP5EFRFJbbznz1I";
+  static String userName = "carlosRios";
 
   static Future<void> initializeData(ApiServicio apiServicio) async {
 
