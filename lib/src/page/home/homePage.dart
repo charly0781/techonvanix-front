@@ -116,13 +116,13 @@ class _HomePageState extends State<HomePage> {
 
   void _onMenuItemSelected(Map<String, dynamic> selectedItem) {
     setState(() {
-      this.selectedItem = selectedItem;  // Guardamos el ítem seleccionado en el estado
+      this.selectedItem = selectedItem;
     });
   }
 
   void _resetSelectedItem() {
     setState(() {
-      selectedItem = null;  // Restaurar a ContentHome cuando se cierra una ventana
+      selectedItem = null;
     });
   }
 

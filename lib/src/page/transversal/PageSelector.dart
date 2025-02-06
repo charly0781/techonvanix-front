@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:techonvanix/src/page/dinamicPage/NotFoundPage.dart';
 import 'package:techonvanix/src/page/home/userpage/RegisterPageForm.dart';
+import 'package:techonvanix/src/page/transversal/Formulario.dart';
 import '../home/login/LoginForm.dart';
 
 class PageSelector extends StatefulWidget {
@@ -39,6 +40,11 @@ class _PageSelectorState extends State<PageSelector> {
           _navigateToPage(RegisterPageForm());
         });
         break;
+      case 'formulario':
+        Future.delayed(Duration.zero, () {
+          _buildFormularioPage(context);
+        });
+        break;
       default:
         Future.delayed(Duration.zero, () {
           _navigateToPage(NotFoundPage());
@@ -66,6 +72,22 @@ class _PageSelectorState extends State<PageSelector> {
       widget.onClose();  // Llamamos a la función para restaurar la pantalla
     });
   }
+
+  void _buildFormularioPage(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return TablaSeleccionDialog();
+      },
+    ).then((resultado) {
+      if (resultado != null && resultado is List<Map<String, String>>) {
+        print("Datos seleccionados: $resultado");
+        // Puedes hacer algo con los datos seleccionados, como pasarlos a otro widget
+      }
+    });
+  }
+
 
   void _navigateToPage(Widget page) {
     Navigator.push(

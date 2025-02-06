@@ -3,6 +3,7 @@ import 'package:techonvanix/src/page/home/login/LoginForm.dart';
 import 'package:techonvanix/src/page/home/userpage/RegisterPageForm.dart';
 import '../../dto/library/GlobalData.dart';
 import '../transversal/DynamicImageLoader.dart';
+import '../transversal/Formulario.dart';
 
 
 class HeaderHomePage extends StatelessWidget {
@@ -81,7 +82,7 @@ class HeaderHomePage extends StatelessWidget {
 
   // Método para construir los elementos del menú
   List<Widget> _buildMenuItems(BuildContext context) {
-    List<String> menuItems = ['Precios', 'Empresa', 'Herramientas'];
+    List<String> menuItems = ['Precios', 'Empresa',];
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -121,11 +122,19 @@ class HeaderHomePage extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
+          TextButton(
+            onPressed: () {
+              _buildFormularioPage(context);
+            },
+            child: const Text(
+              'Formulario',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
         ],
       ),
     );
   }
-
 
   void _onLoginClick(BuildContext context) {
     showDialog(
@@ -145,4 +154,20 @@ class HeaderHomePage extends StatelessWidget {
       },
     );
   }
+
+  void _buildFormularioPage(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return TablaSeleccionDialog();
+      },
+    ).then((resultado) {
+      if (resultado != null && resultado is List<Map<String, String>>) {
+        print("Datos seleccionados: $resultado");
+        // Puedes hacer algo con los datos seleccionados, como pasarlos a otro widget
+      }
+    });
+  }
+
 }

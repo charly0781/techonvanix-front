@@ -25,11 +25,11 @@ class MyApp extends StatelessWidget {
 
         switch (names?[0]) {
           case '/home':
-            // return MaterialPageRoute(builder: (context) => HomePage());
-            return MaterialPageRoute(builder: (context) => UserPage(
-              token: GlobalData.token,
-              userName: 'carlosRios@techonvanix.com',
-            ));
+            return MaterialPageRoute(builder: (context) => HomePage());
+            // return MaterialPageRoute(builder: (context) => UserPage(
+            //   token: GlobalData.token,
+            //   userName: 'carlosRios@techonvanix.com',
+            // ));
           case '/AccountActivation':
             String data = "";
             if (names!.length > 1) {
@@ -50,11 +50,11 @@ class MyApp extends StatelessWidget {
         }
       },
       routes: {
-        // '/home': (context) => const HomePage(),
-        '/userPage': (context) =>  UserPage(
-          token: GlobalData.token,
-          userName: 'carlosRios@techonvanix.com',
-        ),
+        '/home': (context) => const HomePage(),
+        // '/userPage': (context) =>  UserPage(
+        //   token: GlobalData.token,
+        //   userName: 'carlosRios@techonvanix.com',
+        // ),
         '/NotFoundPage': (context) => NotFoundPage(),
         '/AccountActivation': (context) => AccountActivationPage(encryptedData: ""),
       },
