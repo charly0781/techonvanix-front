@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:techonvanix/src/page/home/ContentHome.dart';
-import 'package:techonvanix/src/page/transversal/PageSelector.dart';
 import '../../dto/library/ApiResponse.dart';
 import '../../dto/library/GlobalData.dart';
 import '../../service/Utilitarios.dart';
@@ -9,6 +7,7 @@ import 'FloatingMenu.dart';
 import 'HeaderHomePage.dart';
 import 'MenuBarHeader.dart';
 import 'FooterHomePage.dart';
+import 'content/Content.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? companyData = GlobalData.companyData;
-    final List<dynamic>? allUrls = GlobalData.allUrls;
 
     return Scaffold(
       drawer: Drawer(
@@ -60,12 +58,13 @@ class _HomePageState extends State<HomePage> {
             children: [
               const HeaderHomePage(),
               Expanded(
-                child: selectedItem == null
-                    ? const ContentHome()
-                    : PageSelector(
-                  drawerItem: selectedItem!,
-                  onClose: _resetSelectedItem,
-                ),
+                  child: Content(menu: contentItem),
+                // child: selectedItem == null
+                //     ? const ContentHome()
+                //     : PageSelector(
+                //   drawerItem: selectedItem!,
+                //   onClose: _resetSelectedItem,
+                // ),
               ),
               const FooterHomePage(),
             ],
@@ -125,6 +124,5 @@ class _HomePageState extends State<HomePage> {
       selectedItem = null;
     });
   }
-
 
 }

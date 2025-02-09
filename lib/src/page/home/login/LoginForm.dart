@@ -136,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
       final data = response.body;
       GlobalData.userName = username;
       GlobalData.token = data['token'].toString().replaceFirst("Bearer ", "") ?? "";
-      print ("Token: " + GlobalData.token);
+      // print ("Token: " + GlobalData.token);
       ScaffoldMessenger.of(parentContext).showSnackBar(
           SnackBar(content: Text("Acceso garantizado...",style: TextStyle(fontSize: 14),)),
       );
