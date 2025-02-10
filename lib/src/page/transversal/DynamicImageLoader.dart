@@ -10,29 +10,29 @@ class DynamicImageLoader extends StatelessWidget {
     Key? key,
     required this.placeholderPath,
     this.imageUrl,
-    this.width = 160.0,
-    this.height = 60.0,
+    required this.width,
+    required this.height,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return imageUrl != null
-        ? Image.network(
-      imageUrl!,
+    return SizedBox(
       width: width,
       height: height,
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset(
-          placeholderPath,
-          width: width,
-          height: height,
-        );
-      },
-    )
-        : Image.asset(
-      placeholderPath,
-      width: width,
-      height: height,
+      child: Image.network(
+        imageUrl!,
+        width: width,
+        height: height,
+        fit: BoxFit.cover, // Asegura que la imagen llene el espacio correctamente
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            placeholderPath,
+            width: width,
+            height: height,
+            fit: BoxFit.cover, // También en la imagen por defecto
+          );
+        },
+      ),
     );
   }
 }

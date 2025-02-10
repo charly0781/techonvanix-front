@@ -75,7 +75,7 @@ class MisionPage extends StatelessWidget {
                   child: DynamicImageLoader(
                     placeholderPath: 'lib/src/img/mision.png',
                     imageUrl: misionPage?["urlImage"] ?? '',
-                    width: 200,
+                    width: 300,
                     height: 200,
                   ),
                 ),

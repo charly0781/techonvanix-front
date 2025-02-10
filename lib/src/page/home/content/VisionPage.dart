@@ -44,7 +44,7 @@ class VisionPage extends StatelessWidget {
                   child: DynamicImageLoader(
                     placeholderPath: 'lib/src/img/vision.png',
                     imageUrl: visionPage?["urlImage"] ?? '',
-                    width: 200,
+                    width: 300,
                     height: 200,
                   ),
                 ),
@@ -52,7 +52,7 @@ class VisionPage extends StatelessWidget {
             ),
           SizedBox(width: 20),
           Expanded(
-            flex: 4,
+            flex: 6,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

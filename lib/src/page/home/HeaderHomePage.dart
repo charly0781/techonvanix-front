@@ -15,12 +15,14 @@ class HeaderHomePage extends StatelessWidget {
     final Map<String, dynamic>? companyData = GlobalData.companyData;
 
     return screenWidth > 670
-        ? _buildDesktopHeader(context, companyData)
-        : _buildMobileHeader(context, companyData);
+        ? _buildDesktopHeader(context, companyData, screenWidth)
+        : _buildMobileHeader(context, companyData, screenWidth);
   }
 
   // Header para dispositivos de escritorio
-  Widget _buildDesktopHeader(BuildContext context, Map<String, dynamic>? companyData) {
+  Widget _buildDesktopHeader(BuildContext context, Map<String, dynamic>? companyData,
+      double screenWidth) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       color: Colors.blue[800],
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
@@ -33,8 +35,8 @@ class HeaderHomePage extends StatelessWidget {
               DynamicImageLoader(
                 placeholderPath: 'lib/src/img/logoSF.png',
                 imageUrl: companyData?['urlLogo']?.toString(),
-                width: 160,
-                height: 60,
+                width: screenWidth > 690 ? 110 : 60,
+                height: screenWidth > 690 ?  55 : 20,
               ),
               const SizedBox(width: 5),
               const Text(
@@ -55,7 +57,8 @@ class HeaderHomePage extends StatelessWidget {
   }
 
   // Header para dispositivos móviles
-  Widget _buildMobileHeader(BuildContext context, Map<String, dynamic>? companyData) {
+  Widget _buildMobileHeader(BuildContext context, Map<String, dynamic>? companyData,
+      double screenWidth) {
     return AppBar(
       backgroundColor: Colors.blue[800],
       title: Row(
@@ -64,8 +67,8 @@ class HeaderHomePage extends StatelessWidget {
           DynamicImageLoader(
             placeholderPath: 'lib/src/img/logoSF.png',
             imageUrl: companyData?['urlLogo']?.toString(),
-            width: 120,
-            height: 40,
+            width: 50,
+            height: 25,
           ),
           const SizedBox(width: 10),
           const Text(' ', style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -82,7 +85,7 @@ class HeaderHomePage extends StatelessWidget {
 
   // Método para construir los elementos del menú
   List<Widget> _buildMenuItems(BuildContext context) {
-    List<String> menuItems = ['Precios', 'Empresa',];
+    List<String> menuItems = ['Empresa',];
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

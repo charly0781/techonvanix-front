@@ -88,7 +88,7 @@ class _PlanesPageState extends State<PlanesPage> {
                 elevation: 5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Container(
-                  width: screenWidth > 670 ? 250 : 180,
+                  width: screenWidth > 670 ? 380 : 180,
                   height: 250, // Altura fija
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -104,7 +104,7 @@ class _PlanesPageState extends State<PlanesPage> {
                           ? plans[index]["nombrePlan"]!
                           : planes[index]["nombre"]!,
                           style: GoogleFonts.poppins(
-                            fontSize: 18,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: selectedPlanIndex == index
                                 ? Colors.blueAccent
@@ -115,7 +115,7 @@ class _PlanesPageState extends State<PlanesPage> {
                           plans.isNotEmpty
                               ? plans[index]["descripcion"]!
                               : planes[index]["descripcion"]!,
-                          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
+                          style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[700]),
                         ),
                         onTap: () {
                           setState(() {
