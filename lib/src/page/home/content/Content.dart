@@ -24,7 +24,7 @@ class Content extends StatelessWidget {
                 MisionPage(menu: menu),
                 VisionPage(menu: menu),
                 IntegrationPage(menu: menu),
-                // Planespage(menu: menu)
+                PlanesPage(menu: menu)
 
               ],
             ),

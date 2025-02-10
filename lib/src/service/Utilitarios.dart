@@ -12,7 +12,6 @@ class Utilitarios {
     final List<dynamic>? allUrls = GlobalData.allUrls;
 
     String url = Utilitarios.getUrlData(allUrls, codigo, parametros);
-
     final apiServicio = ApiServicio(baseUrl: '');
 
     try {

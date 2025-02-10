@@ -51,7 +51,7 @@ class _LoginFormState extends State<LoginForm> {
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(
-                labelText: 'Usuario',
+                labelText: 'User',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -59,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
-                labelText: 'Contraseña',
+                labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,

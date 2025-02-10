@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         }
       },
       routes: {
-        '/home': (context) => const HomePage(),
+        '/#/home': (context) => const HomePage(),
         // '/userPage': (context) =>  UserPage(
         //   token: GlobalData.token,
         //   userName: 'carlosRios@techonvanix.com',
