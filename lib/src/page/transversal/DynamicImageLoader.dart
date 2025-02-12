@@ -10,8 +10,8 @@ class DynamicImageLoader extends StatelessWidget {
     Key? key,
     required this.placeholderPath,
     this.imageUrl,
-    this.width = 160.0,
-    this.height = 60.0,
+    required this.width,
+    required this.height,
   }) : super(key: key);
 
   @override
