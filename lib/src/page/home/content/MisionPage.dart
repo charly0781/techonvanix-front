@@ -27,8 +27,8 @@ class MisionPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         screenWidth > 670 ? 50 : 20,
-        40,
-        screenWidth > 670 ? 90 : 20,
+        20,
+        screenWidth > 670 ? 40 : 10,
         0,
       ),
       child: Row(
@@ -75,8 +75,8 @@ class MisionPage extends StatelessWidget {
                   child: DynamicImageLoader(
                     placeholderPath: 'lib/src/img/mision.png',
                     imageUrl: misionPage?["urlImage"] ?? '',
-                    width: 200,
-                    height: 200,
+                    width: 250,
+                    height: 250,
                   ),
                 ),
               ),

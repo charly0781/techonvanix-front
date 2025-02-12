@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/home/content/Empresa.dart';
 import 'package:techonvanix/src/page/home/login/LoginForm.dart';
 import 'package:techonvanix/src/page/home/userpage/RegisterPageForm.dart';
 import '../../dto/library/GlobalData.dart';
@@ -7,7 +8,14 @@ import '../transversal/Formulario.dart';
 
 
 class HeaderHomePage extends StatelessWidget {
-  const HeaderHomePage({Key? key}) : super(key: key);
+
+  final List<Map<String, dynamic>> menu;
+  final  Function(String) onPreviewGenerated;
+  const HeaderHomePage({
+    required this.menu,
+    required this.onPreviewGenerated, // Incluirlo como requerido
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +41,8 @@ class HeaderHomePage extends StatelessWidget {
               DynamicImageLoader(
                 placeholderPath: 'lib/src/img/logoSF.png',
                 imageUrl: companyData?['urlLogo']?.toString(),
-                width: 160,
-                height: 60,
+                width: 100,
+                height: 50,
               ),
               const SizedBox(width: 5),
               const Text(
@@ -64,7 +72,7 @@ class HeaderHomePage extends StatelessWidget {
           DynamicImageLoader(
             placeholderPath: 'lib/src/img/logoSF.png',
             imageUrl: companyData?['urlLogo']?.toString(),
-            width: 120,
+            width: 80,
             height: 40,
           ),
           const SizedBox(width: 10),
@@ -82,18 +90,22 @@ class HeaderHomePage extends StatelessWidget {
 
   // Método para construir los elementos del menú
   List<Widget> _buildMenuItems(BuildContext context) {
-    List<String> menuItems = ['Precios', 'Empresa',];
+    List<String> menuItems = ['Empresa',];
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text(
-          item,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+        child: GestureDetector(
+          onTap: () {
+            onPreviewGenerated(item);
+          },
+          child: Text(
+            item,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ),
       );
     }).toList();
   }
-
 
   Widget _buildLoginItem(BuildContext context) {
     return Padding(
@@ -169,5 +181,4 @@ class HeaderHomePage extends StatelessWidget {
       }
     });
   }
-
 }

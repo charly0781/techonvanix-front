@@ -26,9 +26,9 @@ class VisionPage extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        screenWidth > 670 ? 60 : 20,
+        screenWidth > 670 ? 50 : 20,
         40,
-        screenWidth > 670 ? 90 : 20,
+        screenWidth > 670 ? 40 : 20,
         0,
       ),
       child: Row(
@@ -44,8 +44,8 @@ class VisionPage extends StatelessWidget {
                   child: DynamicImageLoader(
                     placeholderPath: 'lib/src/img/vision.png',
                     imageUrl: visionPage?["urlImage"] ?? '',
-                    width: 200,
-                    height: 200,
+                    width: 250,
+                    height: 250,
                   ),
                 ),
               ),

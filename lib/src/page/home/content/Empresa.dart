@@ -1,15 +1,17 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:techonvanix/src/page/home/content/pageviewe/ContentAds.dart';
+import 'IntegrationPage.dart';
+import 'MisionPage.dart';
+import 'PlanesPage.dart';
+import 'VisionPage.dart';
 
-class Content extends StatelessWidget {
+class Empresa extends StatelessWidget {
 
   final List<Map<String, dynamic>> menu;
-  Content({required this.menu});
+  Empresa({required this.menu});
 
   @override
   Widget build(BuildContext context) {
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -19,7 +21,10 @@ class Content extends StatelessWidget {
             ),
             child: Column(
               children: [
-                ContentAds(menu: menu),
+                MisionPage(menu: menu),
+                VisionPage(menu: menu),
+                IntegrationPage(menu: menu),
+                PlanesPage(menu: menu)
               ],
             ),
           ),

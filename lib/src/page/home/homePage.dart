@@ -8,6 +8,7 @@ import 'HeaderHomePage.dart';
 import 'MenuBarHeader.dart';
 import 'FooterHomePage.dart';
 import 'content/Content.dart';
+import 'content/Empresa.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
 
+  String selectItem = "";
   Map<String, dynamic>? selectedItem;
   final String codeUrl = "geturlMenu";
   int code = 0;
@@ -56,9 +58,16 @@ class _HomePageState extends State<HomePage> {
           ),
           Column(
             children: [
-              const HeaderHomePage(),
+              HeaderHomePage(menu: contentItem,
+                onPreviewGenerated: (item) {
+                  setState(() {
+                    selectItem = item;
+                  });
+                },),
               Expanded(
-                  child: Content(menu: contentItem),
+               child: selectItem.isEmpty
+                 ? Content(menu: contentItem)
+                 : Empresa(menu: contentItem),
                 // child: selectedItem == null
                 //     ? const ContentHome()
                 //     : PageSelector(
@@ -100,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         );
         contentItem = List<Map<String, dynamic>>.from(
           data['menu']?.where((element) => element['active'] == true
-              && element['tipo'] == 'H') ?? [],
+              ) ?? [],
         );
       });
     }

@@ -26,6 +26,7 @@ class DynamicImageLoader extends StatelessWidget {
           placeholderPath,
           width: width,
           height: height,
+          fit: BoxFit.cover,
         );
       },
     )
@@ -33,6 +34,7 @@ class DynamicImageLoader extends StatelessWidget {
       placeholderPath,
       width: width,
       height: height,
+      fit: BoxFit.cover,
     );
   }
 }
