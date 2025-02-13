@@ -13,7 +13,7 @@ class HeaderHomePage extends StatelessWidget {
   final  Function(String) onPreviewGenerated;
   const HeaderHomePage({
     required this.menu,
-    required this.onPreviewGenerated, // Incluirlo como requerido
+    required this.onPreviewGenerated,
     Key? key,
   }) : super(key: key);
 
@@ -43,8 +43,8 @@ class HeaderHomePage extends StatelessWidget {
               DynamicImageLoader(
                 placeholderPath: 'lib/src/img/logoSF.png',
                 imageUrl: companyData?['urlLogo']?.toString(),
-                width: screenWidth > 690 ? 110 : 60,
-                height: screenWidth > 690 ?  55 : 20,
+                width: screenWidth > 690 ? 80 : 60,
+                height: screenWidth > 690 ?  40 : 20,
               ),
               const SizedBox(width: 5),
               const Text(
@@ -65,7 +65,8 @@ class HeaderHomePage extends StatelessWidget {
   }
 
   // Header para dispositivos móviles
-  Widget _buildMobileHeader(BuildContext context, Map<String, dynamic>? companyData) {
+  Widget _buildMobileHeader(BuildContext context, Map<String, dynamic>? companyData,
+      double screenWidth) {
     return AppBar(
       backgroundColor: Colors.blue[800],
       title: Row(
@@ -92,17 +93,23 @@ class HeaderHomePage extends StatelessWidget {
 
   // Método para construir los elementos del menú
   List<Widget> _buildMenuItems(BuildContext context) {
-    List<String> menuItems = ['Precios', 'Empresa',];
+    List<String> menuItems = ['Empresa'];
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text(
-          item,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+        child: TextButton(
+          onPressed: () {
+            onPreviewGenerated(item);
+          },
+          child: Text(
+            item,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ),
       );
     }).toList();
   }
+
 
 
   Widget _buildLoginItem(BuildContext context) {

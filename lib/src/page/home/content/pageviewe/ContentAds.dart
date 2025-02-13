@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../../../transversal/DynamicImageLoader.dart';
@@ -44,7 +45,7 @@ class _ContentAdsState extends State<ContentAds> {
   }
 
   void _startAutoScroll() {
-    Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (_currentIndex < ads.length - 1) {
         _currentIndex++;
       } else {
@@ -92,6 +93,7 @@ class _ContentAdsState extends State<ContentAds> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Stack(
         children: [
+          // Imagen de fondo
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -103,45 +105,40 @@ class _ContentAdsState extends State<ContentAds> {
               ),
             ),
           ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.black.withOpacity(0.3),
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    ad['title']!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+          // Contenedor para los textos con margen
+          Positioned(
+            top: 20, // margen superior de 20 píxeles
+            left: 20,
+            right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  utf8.decode((ad['legend'] as String).runes.toList()),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    ad['description']!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
+                ),
+                SizedBox(height: 20), // espacio entre legend y description
+                Text(
+                  utf8.decode((ad['description'] as String).runes.toList()),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
                   ),
-                ],
-              ),
+                  softWrap: true,
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+
   }
 
 
@@ -150,7 +147,7 @@ class _ContentAdsState extends State<ContentAds> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(ads.length, (index) {
         return Container(
-          margin: EdgeInsets.symmetric(horizontal: 4),
+          margin: EdgeInsets.symmetric(horizontal: 3),
           width: _currentIndex == index ? 12 : 8,
           height: _currentIndex == index ? 12 : 8,
           decoration: BoxDecoration(

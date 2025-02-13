@@ -21,6 +21,7 @@ class DynamicImageLoader extends StatelessWidget {
       imageUrl!,
       width: width,
       height: height,
+      fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(
           placeholderPath,
