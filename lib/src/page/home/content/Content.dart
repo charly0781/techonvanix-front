@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:techonvanix/src/page/home/content/pageviewe/ContentAds.dart';
 
+import 'EmailMarketingHome.dart';
+
 class Content extends StatelessWidget {
 
   final List<Map<String, dynamic>> menu;
@@ -9,7 +11,6 @@ class Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -17,10 +18,13 @@ class Content extends StatelessWidget {
             constraints: BoxConstraints(
               minHeight: constraints.maxHeight,
             ),
-            child: Column(
-              children: [
-                ContentAds(menu: menu),
-              ],
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  ContentAds(menu: menu),
+                  EmailMarketingApp(),
+                ],
+              ),
             ),
           ),
         );

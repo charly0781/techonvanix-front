@@ -75,8 +75,8 @@ class HeaderHomePage extends StatelessWidget {
           DynamicImageLoader(
             placeholderPath: 'lib/src/img/logoSF.png',
             imageUrl: companyData?['urlLogo']?.toString(),
-            width: 50,
-            height: 25,
+            width: 80,
+            height: 40,
           ),
           const SizedBox(width: 10),
           const Text(' ', style: TextStyle(fontSize: 16, color: Colors.white)),
