@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<ApiResponse> _cargarMenus() async {
-    Map<String, String> replacements = {"code": "homepage"};
+    Map<String, String> replacements = {"code": "all"};
 
     final ApiResponse response = await Utilitarios.realizarPeticion(
       tipoPeticion: "GET",
@@ -103,14 +103,26 @@ class _HomePageState extends State<HomePage> {
       code = response.code;
 
       setState(() {
-        drawerItem = List<Map<String, dynamic>>.from(
-          data['menu']?.where((element) => element['active'] == true
-              && element['tipo'] == 'A') ?? [],
-        );
-        contentItem = List<Map<String, dynamic>>.from(
-          data['menu']?.where((element) => element['active'] == true
-              ) ?? [],
-        );
+        List<Map<String, dynamic>> temp = (data as List?)?.whereType<Map<String, dynamic>>()
+            .where((element) => element['id'] == 'homepage')
+            .toList() ?? [];
+
+        drawerItem = temp
+            .where((item) => item.containsKey('menu') && item['menu'] is List) // Validar 'menu'
+            .expand((item) => (item['menu'] as List)
+            .whereType<Map<String, dynamic>>() // Filtrar solo mapas dentro de 'menu'
+            .where((element) =>
+        element.containsKey('active') && // Evitar errores si falta la clave
+            element.containsKey('tipo') &&
+            element['active'] == true &&
+            element['tipo'] == 'A'))
+            .toList();
+
+        print(drawerItem);
+
+        if (data is List) {
+          contentItem = List<Map<String, dynamic>>.from(data);
+        }
       });
     }
 

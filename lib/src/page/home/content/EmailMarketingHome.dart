@@ -6,7 +6,7 @@ class EmailMarketingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Plataforma de Email Marketing',
+      // title: 'Plataforma de Email Marketing',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

@@ -4,11 +4,15 @@ import 'package:techonvanix/src/page/home/content/pageviewe/ContentAds.dart';
 
 import 'EmailMarketingHome.dart';
 
-class Content extends StatelessWidget {
-
+class Content extends StatefulWidget {
   final List<Map<String, dynamic>> menu;
-  Content({required this.menu});
+  const Content({Key? key, required this.menu}) : super(key: key);
 
+  @override
+  _ContentState createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -21,7 +25,7 @@ class Content extends StatelessWidget {
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  ContentAds(menu: menu),
+                  ContentAds(menu: widget.menu),
                   EmailMarketingApp(),
                 ],
               ),

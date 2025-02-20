@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:techonvanix/src/page/transversal/CustomData.dart';
 
 import '../../../transversal/DynamicImageLoader.dart';
 
@@ -23,11 +24,17 @@ class _ContentAdsState extends State<ContentAds> {
     super.initState();
     print ("menu ads "+ widget.menu.toString());
     if (widget.menu.isNotEmpty) {
-      ads = widget.menu.where(
-              (data) => data['isActive'] == true && data['tipo'] == 'L'
-      ).toList();
-      print("ads: $ads " + ads.toString());
-
+      List<Map<String, dynamic>> temp  = _getMenu('adds');
+      ads = temp
+          .where((item) => item.containsKey('menu') && item['menu'] is List) // Validar 'menu'
+          .expand((item) => (item['menu'] as List)
+          .whereType<Map<String, dynamic>>() // Filtrar solo mapas dentro de 'menu'
+          .where((element) =>
+      element.containsKey('active') && // Evitar errores si falta la clave
+          element.containsKey('tipo') &&
+          element['active'] == true &&
+          element['tipo'] == 'L'))
+          .toList();
     }
     _startAutoScroll();
   }
@@ -37,9 +44,17 @@ class _ContentAdsState extends State<ContentAds> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.menu != widget.menu && widget.menu.isNotEmpty) {
       setState(() {
-        ads = widget.menu.where(
-                (data) => data['tipo'].toString() == 'L'
-        ).toList();
+        List<Map<String, dynamic>> temp  = _getMenu('adds');
+        ads = temp
+              .where((item) => item.containsKey('menu') && item['menu'] is List) // Validar 'menu'
+              .expand((item) => (item['menu'] as List)
+              .whereType<Map<String, dynamic>>() // Filtrar solo mapas dentro de 'menu'
+              .where((element) =>
+          element.containsKey('active') && // Evitar errores si falta la clave
+              element.containsKey('tipo') &&
+              element['active'] == true &&
+              element['tipo'] == 'L'))
+              .toList();
       });
     }
   }
@@ -114,22 +129,19 @@ class _ContentAdsState extends State<ContentAds> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  utf8.decode((ad['legend'] as String).runes.toList()),
+                  utf8.decode((ad['legend']['value'] as String).runes.toList()),
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: CustomData.getFontFromName(ad['legend']['font'],
+                      ad['legend']['fontSize'],
+                      ad['legend']['fontColor'])
                 ),
                 SizedBox(height: 20), // espacio entre legend y description
                 Text(
-                  utf8.decode((ad['description'] as String).runes.toList()),
+                  utf8.decode((ad['description']['value'] as String).runes.toList()),
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
+                  style: CustomData.getFontFromName(ad['description']['font'],
+                    ad['description']['fontSize'],
+                    ad['description']['fontColor']),
                   softWrap: true,
                 ),
               ],
@@ -140,7 +152,6 @@ class _ContentAdsState extends State<ContentAds> {
     );
 
   }
-
 
   Widget _buildIndicators() {
     return Row(
@@ -158,4 +169,12 @@ class _ContentAdsState extends State<ContentAds> {
       }),
     );
   }
+
+  List<Map<String, dynamic>> _getMenu(String codigo) {
+    List<Map<String, dynamic>> temp = ( widget.menu as List?)?.whereType<Map<String, dynamic>>()
+        .where((element) => element['id'] == codigo)
+        .toList() ?? [];
+    return temp;
+  }
+  
 }

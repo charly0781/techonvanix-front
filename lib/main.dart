@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // setUrlStrategy(PathUrlStrategy());
 
-  const baseUrl = 'https://back.techonvanix.com';
+  const baseUrl = 'http://localhost:9060';//'https://back.techonvanix.com';
   final apiServicio = ApiServicio(baseUrl: baseUrl);
 
   try {
