@@ -22,7 +22,6 @@ class _ContentAdsState extends State<ContentAds> {
   @override
   void initState() {
     super.initState();
-    print ("menu ads "+ widget.menu.toString());
     if (widget.menu.isNotEmpty) {
       List<Map<String, dynamic>> temp  = _getMenu('adds');
       ads = temp
@@ -61,16 +60,18 @@ class _ContentAdsState extends State<ContentAds> {
 
   void _startAutoScroll() {
     Timer.periodic(Duration(seconds: 5), (Timer timer) {
-      if (_currentIndex < ads.length - 1) {
-        _currentIndex++;
-      } else {
-        _currentIndex = 0;
+      if (_pageController.hasClients) {
+        if (_currentIndex < ads.length - 1) {
+          _currentIndex++;
+        } else {
+          _currentIndex = 0;
+        }
+        _pageController.animateToPage(
+          _currentIndex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
       }
-      _pageController.animateToPage(
-        _currentIndex,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
     });
   }
 
@@ -133,7 +134,8 @@ class _ContentAdsState extends State<ContentAds> {
                   textAlign: TextAlign.left,
                   style: CustomData.getFontFromName(ad['legend']['font'],
                       ad['legend']['fontSize'],
-                      ad['legend']['fontColor'])
+                      ad['legend']['fontColor'],
+                      true)
                 ),
                 SizedBox(height: 20), // espacio entre legend y description
                 Text(
@@ -141,7 +143,8 @@ class _ContentAdsState extends State<ContentAds> {
                   textAlign: TextAlign.left,
                   style: CustomData.getFontFromName(ad['description']['font'],
                     ad['description']['fontSize'],
-                    ad['description']['fontColor']),
+                    ad['description']['fontColor'],
+                    false),
                   softWrap: true,
                 ),
               ],

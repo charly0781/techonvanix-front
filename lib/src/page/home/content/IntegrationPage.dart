@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_html/flutter_html.dart';
 
+import '../../transversal/CustomData.dart';
+
 class IntegrationPage extends StatelessWidget {
 
   final List<Map<String, dynamic>> menu;
@@ -12,9 +14,7 @@ class IntegrationPage extends StatelessWidget {
   IntegrationPage({required this.menu}) {
     integration = menu.firstWhere(
           (data) =>
-      data['active'] == true &&
-          data['tipo'] == 'H' &&
-          data['title'].toString() == 'Integracion',
+      data['id'] == 'integracion',
       orElse: () => {"title": "Integracion", "content": "", "legend": "Integracion"},
     );
   }
@@ -34,12 +34,11 @@ class IntegrationPage extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              integration!['legend'].toString(),
-              style: GoogleFonts.poppins(
-                fontSize: screenWidth > 670 ? 34 : 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.indigoAccent,
-              ),
+              integration!['legend']['value'].toString(),
+              style: CustomData.getFontFromName(integration!['legend']['font'],
+                  integration!['legend']['fontSize'],
+                  integration!['legend']['fontColor'],
+                  true),
             ),
           ),
           SizedBox(height: 10),
@@ -49,14 +48,14 @@ class IntegrationPage extends StatelessWidget {
               Expanded(
                 child: Html(
                   data: utf8.decode(
-                    (integration!['content'] as String).runes.toList(),
+                    (integration!['content']['value'] as String).runes.toList(),
                     allowMalformed: true,
                   ),
                   style: {
                     "html": Style(
                       fontSize: FontSize(screenWidth > 670
-                          ? 20
-                          : 14,),
+                          ? 18
+                          : 16,),
                       fontFamily: 'monospace',
                     ),
                   },

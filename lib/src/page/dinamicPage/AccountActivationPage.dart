@@ -46,7 +46,6 @@ class _AccountActivationPageState extends State<AccountActivationPage> {
           activationSuccess = false;
           code = response.code;
           if (code == 200 && response.body != null) {
-            print(response.body);
             account = response.body;
             activationSuccess = true;
           } else {

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../transversal/CustomData.dart';
 import '../../transversal/DynamicImageLoader.dart';
 
 class MisionPage extends StatelessWidget {
@@ -13,9 +14,7 @@ class MisionPage extends StatelessWidget {
   MisionPage({required this.menu}) {
     misionPage = menu.firstWhere(
           (data) =>
-      data['active'] == true &&
-          data['tipo'] == 'H' &&
-          data['title'].toString() == 'Mision',
+      data['id'] == 'mision',
       orElse: () => {"title": "Mision", "content": "", "legend": "", "urlImage" : ""},
     );
   }
@@ -41,22 +40,20 @@ class MisionPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  misionPage!['legend'].toString(),
-                  style: GoogleFonts.poppins(
-                    fontSize: screenWidth > 670 ? 30 : 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.indigoAccent,
-                  ),
+                  misionPage!['legend']['value'].toString(),
+                  style: CustomData.getFontFromName(misionPage!['legend']['font'],
+                      misionPage!['legend']['fontSize'],
+                      misionPage!['legend']['fontColor'],
+                      true),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  utf8.decode((misionPage?['content'] as String).runes.toList()),
+                  utf8.decode((misionPage?['content']['value'] as String).runes.toList()),
                   textAlign: TextAlign.justify,
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: screenWidth > 670 ? 20 : 14,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+                  style: CustomData.getFontFromName(misionPage!['content']['font'],
+                    misionPage!['content']['fontSize'],
+                    misionPage!['content']['fontColor'],
+                    false),
                 ),
               ],
             ),

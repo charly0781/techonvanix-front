@@ -52,8 +52,10 @@ class CustomColors {
         return Colors.blueAccent;
       case 'cyanAccent':
         return Colors.cyanAccent;
-        case 'darkGrey':
+      case 'darkGrey':
         return Colors.grey[850]!;
+      case 'indigoAccent':
+        return Colors.indigoAccent;
       default:
         return Colors.black;
     }

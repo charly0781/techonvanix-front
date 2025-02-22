@@ -75,4 +75,41 @@ class MessageDialog {
       );
     }
   }
+  static Future<void> handleMessage({
+    required BuildContext context,
+    String? title,
+    String? message,
+    String? confirmButtonText,
+    String? cancelButtonText,
+    Function()? onConfirm,
+    Function()? onCancel,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: title != null ? Text(title) : null,
+          content: message != null ? Text(message) : null,
+          actions: [
+            if (cancelButtonText != null)
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  if (onCancel != null) onCancel();
+                },
+                child: Text(cancelButtonText),
+              ),
+            if (confirmButtonText != null)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  if (onConfirm != null) onConfirm();
+                },
+                child: Text(confirmButtonText),
+              ),
+          ],
+        );
+      },
+    );
+  }
 }

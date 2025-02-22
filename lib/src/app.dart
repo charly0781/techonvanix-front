@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
               data = names[1].replaceFirst("data=", "");
             }
             if (data.isNotEmpty) {
-              print("arguments " + data);
               return MaterialPageRoute(
                 builder: (context) => AccountActivationPage(
                   encryptedData: data
