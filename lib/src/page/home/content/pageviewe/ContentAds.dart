@@ -78,6 +78,7 @@ class _ContentAdsState extends State<ContentAds> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isMvile = screenWidth < 600;
     if (ads.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }

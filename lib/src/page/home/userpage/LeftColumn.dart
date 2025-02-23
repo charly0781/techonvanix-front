@@ -169,7 +169,7 @@ class _LeftColumnState extends State<LeftColumn> {
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 450),
-      width: isExpanded ? expandedWidth : 20,
+      width: isExpanded ? expandedWidth : 25,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFF84A9F3), Color(0xFF46A1E7), Color(0xFF0266FC)],
@@ -337,15 +337,24 @@ class _LeftColumnState extends State<LeftColumn> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: fields.map((field) {
-            return TextField(
-              controller: _controllers.putIfAbsent(field, () => TextEditingController()),
-              decoration: InputDecoration(labelText: field, border: OutlineInputBorder()),
+            return Column(
+              children: [
+                TextField(
+                  controller: _controllers.putIfAbsent(field, () => TextEditingController()),
+                  decoration: InputDecoration(
+                    labelText: field,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10), // Espacio entre cada TextField
+              ],
             );
           }).toList(),
         ),
       ),
     );
   }
+
 
   Widget _buildButtonsRow() {
     return Center(
